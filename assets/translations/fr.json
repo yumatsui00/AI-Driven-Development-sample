@@ -27,5 +27,53 @@
     "sessionMissing": "Session introuvable. Redirection...",
     "duplicatedEmail": "Cet email est déjà enregistré.",
     "invalidCredentials": "Email ou mot de passe invalide."
+  },
+  "projects": {
+    "title": "Vos projets",
+    "create": "Créer un projet",
+    "create_button": "Nouveau projet",
+    "name_placeholder": "Nom du projet",
+    "empty": "Aucun projet pour l’instant. Créez-en un premier.",
+    "logout": "Se déconnecter",
+    "created_at": "Créé le",
+    "error": "Une erreur est survenue. Réessayez.",
+    "name_required": "Le nom du projet est requis.",
+    "cancel": "Annuler",
+    "delete": "Supprimer"
+  },
+  "boards": {
+    "title": "Tableaux",
+    "create": "Créer un tableau",
+    "create_button": "Nouveau tableau",
+    "name_placeholder": "Nom du tableau",
+    "empty": "Aucun tableau pour le moment. Créez-en un.",
+    "created_at": "Créé le",
+    "delete": "Supprimer",
+    "back": "Retour à l’accueil",
+    "error": "Une erreur est survenue. Réessayez.",
+    "cancel": "Annuler",
+    "loading": "Chargement du tableau..."
+  },
+  "lists": {
+    "title": "Listes",
+    "add": "Ajouter une liste",
+    "name_placeholder": "Nom de la liste",
+    "empty": "Aucune liste pour le moment. Ajoutez-en pour démarrer.",
+    "delete": "Supprimer la liste",
+    "error": "Échec de l’opération sur la liste."
+  },
+  "tasks": {
+    "add": "Ajouter une tâche",
+    "title_placeholder": "Titre de la tâche",
+    "description_placeholder": "Description",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "delete": "Supprimer la tâche",
+    "empty": "Aucune tâche.",
+    "create_error": "Échec de création de la tâche.",
+    "update_error": "Échec de mise à jour de la tâche.",
+    "move_error": "Échec du déplacement de la tâche.",
+    "reorder_error": "Échec du réordonnancement."
   }
 }

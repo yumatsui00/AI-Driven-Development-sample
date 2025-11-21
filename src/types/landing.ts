@@ -26,6 +26,54 @@ export interface TranslationObject {
     duplicatedEmail: string;
     invalidCredentials: string;
   };
+  projects: {
+    title: string;
+    create: string;
+    create_button: string;
+    name_placeholder: string;
+    empty: string;
+    logout: string;
+    created_at: string;
+    error: string;
+    name_required: string;
+    cancel: string;
+    delete: string;
+  };
+  boards: {
+    title: string;
+    create: string;
+    create_button: string;
+    name_placeholder: string;
+    empty: string;
+    created_at: string;
+    delete: string;
+    back: string;
+    error: string;
+    cancel: string;
+    loading: string;
+  };
+  lists: {
+    title: string;
+    add: string;
+    name_placeholder: string;
+    empty: string;
+    delete: string;
+    error: string;
+  };
+  tasks: {
+    add: string;
+    title_placeholder: string;
+    description_placeholder: string;
+    save: string;
+    cancel: string;
+    edit: string;
+    delete: string;
+    empty: string;
+    create_error: string;
+    update_error: string;
+    move_error: string;
+    reorder_error: string;
+  };
 }
 
 export interface LandingHeaderProps {

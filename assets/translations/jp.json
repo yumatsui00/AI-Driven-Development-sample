@@ -27,5 +27,53 @@
     "sessionMissing": "セッションが見つかりません。リダイレクトします。",
     "duplicatedEmail": "このメールは既に登録されています。",
     "invalidCredentials": "メールまたはパスワードが正しくありません。"
+  },
+  "projects": {
+    "title": "あなたのプロジェクト",
+    "create": "プロジェクト作成",
+    "create_button": "新規プロジェクト",
+    "name_placeholder": "プロジェクト名",
+    "empty": "まだプロジェクトがありません。まずは作成しましょう。",
+    "logout": "ログアウト",
+    "created_at": "作成日",
+    "error": "エラーが発生しました。やり直してください。",
+    "name_required": "プロジェクト名は必須です。",
+    "cancel": "キャンセル",
+    "delete": "削除"
+  },
+  "boards": {
+    "title": "ボード一覧",
+    "create": "ボード作成",
+    "create_button": "新規ボード",
+    "name_placeholder": "ボード名",
+    "empty": "まだボードがありません。作成してください。",
+    "created_at": "作成日",
+    "delete": "削除",
+    "back": "ホームに戻る",
+    "error": "エラーが発生しました。やり直してください。",
+    "cancel": "キャンセル",
+    "loading": "ボードを読み込み中..."
+  },
+  "lists": {
+    "title": "リスト",
+    "add": "リストを追加",
+    "name_placeholder": "リスト名",
+    "empty": "まだリストがありません。追加して整理を始めましょう。",
+    "delete": "リストを削除",
+    "error": "リストの操作に失敗しました。"
+  },
+  "tasks": {
+    "add": "タスクを追加",
+    "title_placeholder": "タスク名",
+    "description_placeholder": "詳細",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "edit": "編集",
+    "delete": "タスクを削除",
+    "empty": "タスクがありません。",
+    "create_error": "タスクの作成に失敗しました。",
+    "update_error": "タスクの更新に失敗しました。",
+    "move_error": "タスクの移動に失敗しました。",
+    "reorder_error": "タスクの並び替えに失敗しました。"
   }
 }

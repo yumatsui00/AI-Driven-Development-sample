@@ -1,121 +1,147 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import BoardCard from "@/components/project/BoardCard";
+import BoardCreateDialog from "@/components/project/BoardCreateDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import type { Session } from "@/types/auth";
+import type { Board } from "@/types/board";
+import type { Project } from "@/types/project";
 import type { Lang } from "@/types/landing";
 import { loadTranslation } from "@/utils/i18n";
-import { clearSession, getSession } from "@/utils/session";
 import { getStoredLang, setStoredLang } from "@/utils/lang";
-import ProjectCard from "@/components/project/ProjectCard";
-import ProjectCreateDialog from "@/components/project/ProjectCreateDialog";
-import type { Project } from "@/types/project";
+import { getSession } from "@/utils/session";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-/**
- * Protected home page; requires client redirect guard from layout.
- */
-export default function HomePage() {
-  const router = useRouter();
-  const [session, setSession] = useState<Session | null>(null);
-  const [lang, setLang] = useState(() => getStoredLang("en"));
-  const translation = useMemo(() => loadTranslation(lang), [lang]);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const languages = Object.keys(translation.languages) as Lang[];
+type Params = { projectId?: string };
 
-  const fetchProjects = useCallback(async (userId: string) => {
+export default function ProjectBoardsPage() {
+  const router = useRouter();
+  const params = useParams<Params>();
+  const projectId = typeof params?.projectId === "string" ? params.projectId : "";
+
+  const [lang, setLang] = useState<Lang>(() => getStoredLang("en"));
+  const translation = useMemo(() => loadTranslation(lang), [lang]);
+  const languages = Object.keys(translation.languages) as Lang[];
+  const [boards, setBoards] = useState<Board[]>([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [project, setProject] = useState<Project | null>(null);
+
+  const fetchBoards = useCallback(async () => {
     setLoading(true);
     setError("");
+    if (!projectId) {
+      router.replace("/home");
+      return;
+    }
     try {
-      const res = await fetch("/api/projects/list", {
+      const res = await fetch("/api/boards/list", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId })
+        body: JSON.stringify({ projectId })
       });
       const data = await res.json();
       if (!res.ok || data.error) {
-        setError(translation.projects.error);
-        setProjects([]);
+        setError(translation.boards.error);
         return;
       }
-      setProjects(data.projects as Project[]);
+      setBoards(data.boards as Board[]);
     } catch (e) {
-      setError(translation.projects.error);
-      setProjects([]);
+      setError(translation.boards.error);
     } finally {
       setLoading(false);
     }
-  }, [translation.projects.error]);
+  }, [projectId, router, translation.boards.error]);
+
+  const validateProject = useCallback(
+    async (userId: string) => {
+      if (!projectId) {
+        router.replace("/home");
+        return;
+      }
+      try {
+        const res = await fetch("/api/projects/list", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId })
+        });
+        const data = await res.json();
+        if (!res.ok || data.error) {
+          router.replace("/home");
+          return;
+        }
+        const projects = (data.projects as Project[]) ?? [];
+        const found = projects.find((p) => p.id === projectId);
+        if (!found) {
+          router.replace("/home");
+          return;
+        }
+        setProject(found);
+        fetchBoards();
+      } catch (e) {
+        router.replace("/home");
+      }
+    },
+    [fetchBoards, projectId, router]
+  );
 
   useEffect(() => {
-    const current = getSession();
-    if (!current) {
+    const session = getSession();
+    if (!session) {
       router.replace("/");
       return;
     }
-    setSession(current);
-    fetchProjects(current.userId);
-  }, [router, fetchProjects]);
-
-  const handleLogout = () => {
-    clearSession();
-    router.replace("/");
-  };
+    if (!projectId) {
+      router.replace("/home");
+      return;
+    }
+    validateProject(session.userId);
+  }, [projectId, router, validateProject]);
 
   const handleCreate = async (name: string) => {
-    if (!session) return;
     setError("");
-    const res = await fetch("/api/projects/create", {
+    const res = await fetch("/api/boards/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, userId: session.userId })
+      body: JSON.stringify({ name, projectId })
     });
     const data = await res.json();
     if (!res.ok || data.error) {
       throw new Error(data.error ?? "create_failed");
     }
-    await fetchProjects(session.userId);
+    await fetchBoards();
   };
 
   const handleDelete = async (id: string) => {
-    if (!session) return;
     setError("");
-    const res = await fetch("/api/projects/delete", {
+    const res = await fetch("/api/boards/delete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, userId: session.userId })
+      body: JSON.stringify({ id })
     });
     const data = await res.json();
     if (!res.ok || data.error) {
-      setError(translation.projects.error);
+      setError(translation.boards.error);
       return;
     }
-    await fetchProjects(session.userId);
+    await fetchBoards();
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-white via-ink-50 to-ink-100 px-4 py-10 text-ink-900">
-      <div className="w-full max-w-3xl">
+      <div className="w-full max-w-4xl">
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between gap-3">
-              <div>
-                <h1 className="text-2xl font-bold text-ink-900">
-                  {translation.projects.title}
-                </h1>
-                <p className="text-sm text-ink-600">{translation.auth.dashboardTitle}</p>
+              <div className="space-y-1">
+                <h1 className="text-2xl font-bold text-ink-900">{translation.boards.title}</h1>
+                <p className="text-sm text-ink-600">{project?.name ?? translation.boards.back}</p>
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="border border-ink-200 bg-white"
-                  >
+                  <Button variant="ghost" size="sm" className="border border-ink-200 bg-white">
                     {translation.language}: {translation.languages[lang]}
                   </Button>
                 </DropdownMenuTrigger>
@@ -140,39 +166,29 @@ export default function HomePage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <p className="text-base text-ink-700">
-                {translation.auth.welcome}: {session?.email ?? ""}
-              </p>
-              <Button
-                size="sm"
-                variant="ghost"
-                className="border border-ink-200 bg-white"
-                onClick={handleLogout}
-              >
-                {translation.projects.logout}
+              <Button variant="ghost" onClick={() => router.replace("/home")}>
+                ← {translation.boards.back}
               </Button>
-            </div>
-            <div className="flex justify-end">
-              <ProjectCreateDialog translation={translation} onCreate={handleCreate} />
+              <BoardCreateDialog translation={translation} onCreate={handleCreate} />
             </div>
             {error ? <p className="text-sm font-semibold text-red-600">{error}</p> : null}
             {loading ? (
               <p className="text-sm text-ink-600">Loading...</p>
-            ) : projects.length === 0 ? (
+            ) : boards.length === 0 ? (
               <div className="rounded-xl border border-dashed border-ink-200 bg-white/70 p-4 text-center text-sm text-ink-600">
-                {translation.projects.empty}
+                {translation.boards.empty}
               </div>
             ) : (
-              <div className="grid gap-4">
-                {projects.map((project) => (
-                  <div key={project.id} className="group relative">
-                    <ProjectCard project={project} translation={translation} />
+              <div className="grid gap-4 md:grid-cols-2">
+                {boards.map((board) => (
+                  <div key={board.id} className="group relative">
+                    <BoardCard board={board} translation={translation} />
                     <button
                       type="button"
                       className="absolute right-3 top-3 hidden rounded-md border border-red-200 bg-white px-2 py-1 text-xs text-red-600 shadow-sm group-hover:block"
-                      onClick={() => handleDelete(project.id)}
+                      onClick={() => handleDelete(board.id)}
                     >
-                      {translation.projects.delete}
+                      {translation.boards.delete}
                     </button>
                   </div>
                 ))}

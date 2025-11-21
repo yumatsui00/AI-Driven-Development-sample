@@ -27,5 +27,53 @@
     "sessionMissing": "Session not found. Redirecting...",
     "duplicatedEmail": "This email is already registered.",
     "invalidCredentials": "Invalid email or password."
+  },
+  "projects": {
+    "title": "Your projects",
+    "create": "Create project",
+    "create_button": "New project",
+    "name_placeholder": "Project name",
+    "empty": "No projects yet. Create your first one.",
+    "logout": "Log out",
+    "created_at": "Created",
+    "error": "Something went wrong. Please try again.",
+    "name_required": "Project name is required.",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "boards": {
+    "title": "Boards",
+    "create": "Create board",
+    "create_button": "New board",
+    "name_placeholder": "Board name",
+    "empty": "No boards yet. Create one to get started.",
+    "created_at": "Created",
+    "delete": "Delete",
+    "back": "Back to Home",
+    "error": "Something went wrong. Please try again.",
+    "cancel": "Cancel",
+    "loading": "Loading board..."
+  },
+  "lists": {
+    "title": "Lists",
+    "add": "Add list",
+    "name_placeholder": "List name",
+    "empty": "No lists yet. Add one to start organizing.",
+    "delete": "Delete list",
+    "error": "Failed to load or update lists."
+  },
+  "tasks": {
+    "add": "Add task",
+    "title_placeholder": "Task title",
+    "description_placeholder": "Description",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete task",
+    "empty": "No tasks yet.",
+    "create_error": "Failed to create task.",
+    "update_error": "Failed to update task.",
+    "move_error": "Failed to move task.",
+    "reorder_error": "Failed to reorder tasks."
   }
 }

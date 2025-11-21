@@ -93,10 +93,10 @@ Project
 ## 7. CSV Schema（初期案）
 
 ### users.csv
-| id | email | password | created_at | updated_at |
+| id | email | password | created_at |
 
 ### projects.csv
-| id | name | created_at | order |
+| id | user_id | name | created_at | updated_at | order |
 
 ### boards.csv
 | id | project_id | name | created_at | order |
