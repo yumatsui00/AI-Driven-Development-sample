@@ -1,0 +1,29 @@
+name: Save PR Diff
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  save-diff:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Fetch base branch
+        run: |
+          git fetch origin ${{ github.base_ref }}
+
+      - name: Generate diff file
+        run: |
+          git diff origin/${{ github.base_ref }}...HEAD > diff.txt
+          echo "Diff generated:"
+          cat diff.txt
+
+      - name: Upload diff artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: pr-diff
+          path: diff.txt
