@@ -1,91 +1,62 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 set -e
 
-echo "=== AI Code Review Execution Start ==="
+echo "=== AI Code Review (Local Diff Mode) ==="
 
-# Create workspace
-mkdir -p .ai
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+AI_DIR="$ROOT_DIR/.ai"
 
-echo "Downloading latest PR diff artifact..."
-gh run download --name pr-diff --dir .ai || {
-  echo "Failed to download diff artifact."
-  exit 1
-}
+mkdir -p "$AI_DIR"
 
-DIFF_FILE=".ai/pr-diff/diff.txt"
-AGENT_FILE="AI/Agent.md"
-FUNCTION_FILE="AI/function.md"
+DIFF_FILE="$AI_DIR/diff.txt"
+PROMPT_FILE="$AI_DIR/review_prompt.txt"
 
-if [ ! -f "$DIFF_FILE" ]; then
-  echo "Error: diff file not found at $DIFF_FILE"
-  exit 1
-fi
+echo "Generating local diff..."
+git diff > "$DIFF_FILE"
 
-if [ ! -f "$AGENT_FILE" ]; then
-  echo "Error: Agent.md not found at $AGENT_FILE"
+if [ ! -s "$DIFF_FILE" ]; then
+  echo "❗ No changes detected. Diff is empty."
+  echo "Make sure you have uncommitted changes or staged commits."
   exit 1
 fi
 
-if [ ! -f "$FUNCTION_FILE" ]; then
-  echo "Error: function.md not found at $FUNCTION_FILE"
+echo "Local diff saved to $DIFF_FILE"
+
+if [ ! -f "$ROOT_DIR/AI/Agent.md" ]; then
+  echo "❗ Missing Agent.md at AI/Agent.md"
   exit 1
 fi
 
-echo "All required files found."
+if [ ! -f "$ROOT_DIR/AI/function.md" ]; then
+  echo "❗ Missing function.md at AI/function.md"
+  exit 1
+fi
 
-echo ""
-echo "=== Review Inputs Preview ==="
-echo "--- Agent.md ---"
-sed -n '1,40p' "$AGENT_FILE"
-echo ""
-echo "--- function.md ---"
-sed -n '1,40p' "$FUNCTION_FILE"
-echo ""
-echo "--- DIFF (first 60 lines) ---"
-sed -n '1,60p' "$DIFF_FILE"
+echo "Building review prompt..."
+cat <<EOF > "$PROMPT_FILE"
+# AI Code Review Request
 
-echo ""
-echo "=== Preparing Review Payload ==="
+Below is the local git diff (not PR diff), combined with Agent.md rules and function.md implementation details.
 
-cat > .ai/review_prompt.txt <<EOF
-You are Codex performing a formal AI-driven code review.
+Use the review rules defined in Agent.md.
 
-Follow strictly the review rules defined in Agent.md.
+---
 
-## Inputs:
-- Agent.md rules
-- function.md (branch specification)
-- diff.txt (PR diff)
-
-## Required Review Criteria:
-1. Specification consistency
-2. Security concerns
-3. TypeScript type safety
-4. Error-handling correctness
-5. CSV / I/O behavior validation
-6. Maintainability and readability
-7. Missing test cases
-
-## Prohibited:
-- Do NOT output code modifications
-- Do NOT fix issues directly
-- Only point out issues, inconsistencies, risks, or missing tests
-
---- Agent.md ---
-$(cat "$AGENT_FILE")
-
---- function.md ---
-$(cat "$FUNCTION_FILE")
-
---- DIFF ---
+## Diff
 $(cat "$DIFF_FILE")
+
+---
+
+## Agent.md
+$(cat "$ROOT_DIR/AI/Agent.md")
+
+---
+
+## function.md
+$(cat "$ROOT_DIR/AI/function.md")
+
 EOF
 
-echo "Review prompt generated at .ai/review_prompt.txt"
-
-echo ""
-echo "=== Ready to Send to Codex ==="
-echo "Open Codex and paste the content of:"
-echo "  .ai/review_prompt.txt"
-echo ""
-echo "=== AI Code Review Preparation Completed ==="
+echo "Review prompt generated at $PROMPT_FILE"
+echo "=== Ready to copy and send to Codex ==="
