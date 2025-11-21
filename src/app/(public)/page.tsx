@@ -3,7 +3,7 @@
 import LandingPage from "@/components/landing/LandingPage";
 
 /**
- * Root route renders the public landing page with default language.
+ * Public landing route (root).
  */
 export default function Home() {
   return <LandingPage />;

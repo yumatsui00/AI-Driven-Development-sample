@@ -12,6 +12,12 @@ export type SignupInput = {
 
 export type LoginInput = SignupInput;
 
+export type Session = {
+  login: boolean;
+  userId: string;
+  email: string;
+};
+
 export type AuthTranslations = {
   auth: {
     signupTitle: string;
