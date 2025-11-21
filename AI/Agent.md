@@ -1,4 +1,6 @@
-# Repository Guidelines
+# Repository Guidelines (AI Copy)
+
+This file mirrors `AGENTS.md` to satisfy review tooling that reads from `AI/Agent.md`. Keep it synchronized with `AGENTS.md`.
 
 This project is a Trello-like web app, but the true goal is an AI-driven development template. Always read `base.txt` and the branch-specific `AI/function.md` before coding; keep TypeScript strict enabled and honor the rules below.
 
@@ -34,4 +36,4 @@ This project is a Trello-like web app, but the true goal is an AI-driven develop
 - AI code review (local diff mode): only after PR is opened and CI passes, the developer runs `./scripts/review.sh` to generate `.ai/diff.txt` and `.ai/review_prompt.txt`, then requests review. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review. After fixes and tests, merge via `dev` → `main`.
 
 ## Commands
-- Install and run: `npm install`, `npm run dev`, `npm run lint`, `npm run build`, `npm start`. Keep dependency versions pinned in `package-lock.json` and list Python deps (if any) in `requirements.txt`.
+- Install and run: `npm install`, `npm run dev`, `npm run lint`, `npm run build`, `npm run start`. Keep dependency versions pinned in `package-lock.json` and list Python deps (if any) in `requirements.txt`.

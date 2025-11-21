@@ -14,7 +14,7 @@ Trello 風プロジェクト管理アプリを題材に、AI 駆動開発の雛�
 - CSV IO は必ず `src/utils/csv/` の共通関数経由。全読み込み→追記→全書き戻し、ID 置換更新、削除は残行再生成。結果は `Result` で返し、logic/utils で throw 禁止。エラーは英語で簡潔にし、`console.error` でログ。
 - コメント: すべての関数に JSDoc（概要・引数・戻り値・例外/Result）。ファイル先頭コメント禁止。英語のみ。
 - テスト: 機能確定後にロジック層のみ作成（純粋関数のユニット、CSV IO のリポジトリ、タスク/プロジェクトの一連フローの統合）。UI テスト不要。
-- ブランチ/PR: `main` 直 push 禁止。`feature/*` `fix/*` `refactor/*` `chore/*` で作業し `dev` → `main` の順に統合。PR 手順: ブランチ作成 → `AI/function.md` 更新 → 実装 → AI レビュー（diff + function.md の指摘のみ）→ 修正 → テスト追加 → `dev` マージ。
+- ブランチ/PR: `main` 直 push 禁止。`feature/*` `fix/*` `refactor/*` `chore/*` で作業し `dev` → `main` の順に統合。PR 手順: ブランチ作成 → `AI/function.md` 更新 → 実装 → push → PR 作成 → （CI 通過後）開発者が `./scripts/review.sh` でローカル diff を生成しレビュー依頼 → 指摘対応 → テスト追加 → `dev` マージ。
 - ルールや CI を更新したら、必ず本 README と `AI/DEVELOPMENT.md` を最新化する。
 
 ## 実行コマンド

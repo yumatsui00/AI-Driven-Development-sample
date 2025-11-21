@@ -22,6 +22,7 @@ out/
 *.DS_Store
 *.swp
 *.tmp
+.ai/
 .vercel/
 .ruff_cache/
 dist/
