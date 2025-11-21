@@ -39,6 +39,18 @@ export interface TranslationObject {
     cancel: string;
     delete: string;
   };
+  boards: {
+    title: string;
+    create: string;
+    create_button: string;
+    name_placeholder: string;
+    empty: string;
+    created_at: string;
+    delete: string;
+    back: string;
+    error: string;
+    cancel: string;
+  };
 }
 
 export interface LandingHeaderProps {

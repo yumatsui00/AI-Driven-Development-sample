@@ -55,19 +55,6 @@ export default function ProjectBoardsPage() {
     }
   }, [projectId, router, translation.boards.error]);
 
-  useEffect(() => {
-    const session = getSession();
-    if (!session) {
-      router.replace("/");
-      return;
-    }
-    if (!projectId) {
-      router.replace("/home");
-      return;
-    }
-    validateProject(session.userId);
-  }, [projectId, router, fetchBoards, validateProject]);
-
   const validateProject = useCallback(
     async (userId: string) => {
       if (!projectId) {
@@ -99,6 +86,19 @@ export default function ProjectBoardsPage() {
     },
     [fetchBoards, projectId, router]
   );
+
+  useEffect(() => {
+    const session = getSession();
+    if (!session) {
+      router.replace("/");
+      return;
+    }
+    if (!projectId) {
+      router.replace("/home");
+      return;
+    }
+    validateProject(session.userId);
+  }, [projectId, router, validateProject]);
 
   const handleCreate = async (name: string) => {
     setError("");
