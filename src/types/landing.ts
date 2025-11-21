@@ -37,6 +37,7 @@ export interface TranslationObject {
     error: string;
     name_required: string;
     cancel: string;
+    delete: string;
   };
 }
 
