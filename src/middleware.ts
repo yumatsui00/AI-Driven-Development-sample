@@ -6,5 +6,5 @@ export function middleware() {
 
 // Match only real routes; route groups do not appear in URLs.
 export const config = {
-  matcher: ["/", "/home", "/login", "/signup"]
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"]
 };
