@@ -23,4 +23,7 @@ jobs:
           cat diff.txt
 
       - name: Upload diff artifact
-        uses: actions/up
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-diff
+          path: diff.txt
