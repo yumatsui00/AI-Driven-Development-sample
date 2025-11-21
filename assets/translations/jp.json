@@ -40,5 +40,17 @@
     "name_required": "プロジェクト名は必須です。",
     "cancel": "キャンセル",
     "delete": "削除"
+  },
+  "boards": {
+    "title": "ボード一覧",
+    "create": "ボード作成",
+    "create_button": "新規ボード",
+    "name_placeholder": "ボード名",
+    "empty": "まだボードがありません。作成してください。",
+    "created_at": "作成日",
+    "delete": "削除",
+    "back": "ホームに戻る",
+    "error": "エラーが発生しました。やり直してください。",
+    "cancel": "キャンセル"
   }
 }

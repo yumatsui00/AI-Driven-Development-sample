@@ -27,6 +27,7 @@ export function loadTranslation(lang: Lang): TranslationObject {
     languages: selected.languages ?? base.languages,
     aiSummary: selected.aiSummary ?? base.aiSummary,
     auth: selected.auth ?? base.auth,
-    projects: selected.projects ?? base.projects
+    projects: selected.projects ?? base.projects,
+    boards: selected.boards ?? base.boards
   };
 }

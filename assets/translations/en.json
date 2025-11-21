@@ -40,5 +40,17 @@
     "name_required": "Project name is required.",
     "cancel": "Cancel",
     "delete": "Delete"
+  },
+  "boards": {
+    "title": "Boards",
+    "create": "Create board",
+    "create_button": "New board",
+    "name_placeholder": "Board name",
+    "empty": "No boards yet. Create one to get started.",
+    "created_at": "Created",
+    "delete": "Delete",
+    "back": "Back to Home",
+    "error": "Something went wrong. Please try again.",
+    "cancel": "Cancel"
   }
 }

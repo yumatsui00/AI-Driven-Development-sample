@@ -1,162 +1,149 @@
-# Function: Home Page (`/home`)
+# Function: Board List Page  
+`/projects/[projectId]/boards`
 
 ## Purpose
-This page serves as the dashboard after login.  
-It displays all projects belonging to the logged-in user,  
-and allows creating and deleting projects.
+Projectをクリックしたときに遷移する「Board一覧ページ」を作成する。  
+Board の一覧表示、作成、削除ができる最小構成とする。
+
+---
 
 ## Scope
-This feature includes:
-- Implement `/home` page UI and logic
-- Redirect users not logged in to `/`
-- List projects filtered by the current user
-- Create new projects (with dialog)
-- Delete projects (simple UI)
-- Apply translations (jp/en/fr)
-- Use CSV repository and logic layer
-- Logic tests will be added after PR
+
+### この機能に含むもの
+- `/projects/[projectId]/boards` ページ作成
+- projectId に紐づく board 一覧表示
+- board の新規作成
+- board の削除
+- Project名の表示（任意）
+- 戻るボタン（Homeへ）
+
+### 含まないもの
+- Board を開いた中身（List/Task）
+- ドラッグ＆ドロップ
+- Board の編集・並び替え
 
 ---
 
 ## Page Behavior
 
-### Auth Redirect
-- Read `userId` from `localStorage`
-- If missing → `router.replace("/")`
+### 1. ルーティング
+`/projects/[projectId]/boards`
 
-### Project Listing
-- Call: `listProjects(userId)`
-- Order by ascending `order`
-- Display each project as a Card
-- Empty state is shown with a create button
+### 2. 認証リダイレクト
+- 未ログイン → `/` へ redirect
+- ログイン済み → 続行
 
-### Create Project
-- Button → opens a Dialog
-- Call: `createProject(name, userId)`
-- Refresh the list after creation
+### 3. projectId の検証
+- `projects.csv` から `projectId` の存在確認
+- 存在しなければ `/home` へ redirect（※安全性のため）
 
-### Project Card
-- Display project name + created_at
-- (Navigation to boards will be added later)
+### 4. board 一覧
+- `listBoards(projectId)` を呼ぶ
+- `order` 昇順で表示
+- カード UI（shadcn/ui）で一覧表示
 
-### Header
-- Left: Language dropdown
-- Right: Logout button (remove userId → `/`)
+### 5. board 作成
+- 名前入力 → createBoard(name, projectId)
+- CSV 追記
+- 成功時に再フェッチ／再描画
+
+### 6. board 削除
+- 削除アイコンを押すと deleteBoard(id)
+- 確認ダイアログは入れない（MVPのため）
 
 ---
 
-## CSV Schema (`db/projects.csv`)
-id, user_id, name, created_at, updated_at, order
+## CSV Schema（boards.csv）
+id, project_id, name, created_at, updated_at, order
 
 yaml
 Copy code
 
-**Rules**
-- `id`: UUIDv4  
-- `user_id`: id of the logged-in user  
-- `name`: string  
-- `order`: number (display order)  
-- `created_at` / `updated_at`: ISO string  
-- UTF-8, LF (`\n`)  
-- No double quotes  
-- No NULL (empty string allowed)
+### Rules
+- id: UUIDv4  
+- project_id: string  
+- name: string  
+- order: number（昇順に表示）  
+- created_at / updated_at: ISO8601  
+- UTF-8 / LF  
+- クオート禁止  
+- NULL 禁止（空文字許可）
 
 ---
 
-## Type Definitions (`types/project.ts`)
+## Type Definitions（`types/board.ts`）
 ```ts
-export interface Project {
+export interface Board {
   id: string;
-  userId: string;
+  projectId: string;
   name: string;
   createdAt: string;
   updatedAt: string;
   order: number;
 }
-Repository (logic/projectRepository.ts)
-listProjects(userId: string): Result<Project[]>
-Load CSV
+Repository / Logic
+listBoards(projectId: string): Result<Board[]>
+CSVを読み込む
 
-Filter by userId
+project_id でフィルタ
 
-Sort by order
+order昇順に並べる
 
-Return Result.error on failure
+createBoard(name: string, projectId: string): Result<Board>
+UUID作成
 
-createProject(name: string, userId: string): Result<Project>
-Generate id (UUIDv4)
+order = 最後の order + 1
 
-Determine next order (last + 1)
+createdAt / updatedAt = now()
 
-Set createdAt & updatedAt = now()
+CSVへ追記
 
-Append to CSV
-
-Return created project
-
-deleteProject(id: string, userId: string): Result<null>
-Remove row matching id & userId
-
-Rebuild the CSV without that row
-
-Return null
+deleteBoard(id: string): Result<null>
+id に一致する行のみ除去した CSV を再生成
 
 Components
-components/project/ProjectCard.tsx
-Shows project name + created_at using shadcn/ui Card
+BoardCard.tsx
+Boardの名前と作成日時を表示
 
-components/project/ProjectCreateDialog.tsx
-Input for name
+クリックで /projects/[projectId]/boards/[boardId]/lists に行く（※次フェーズ）
 
-Cancel / Create buttons
+BoardCreateDialog.tsx
+名前入力欄
 
-components/ui/Header.tsx
-Language selector
+キャンセル / 作成ボタン
 
-Logout button
+ProjectHeader.tsx
+Project名表示
 
-Translations (required keys)
-lua
+“Back to Home” ボタン
+
+Language selector（共通 Header 使用）
+
+Translations（必要なキー）
+pgsql
 Copy code
-projects.title
-projects.create
-projects.create_button
-projects.name_placeholder
-projects.empty
-projects.logout
-projects.created_at
+boards.title
+boards.create
+boards.create_button
+boards.name_placeholder
+boards.empty
+boards.created_at
+boards.delete
+boards.back
 Routing
-arduino
+bash
 Copy code
-/home   → Project list page
-Tests (added after PR)
-Unit Tests (logic)
-createProject: id, timestamps, order
+/home
+/projects/[projectId]/boards
+Tests（次のPRで追加）
+listBoards（正しいソート）
 
-listProjects: filtering by userId
+createBoard（order の算出、timestamp）
 
-deleteProject: row removal
+deleteBoard（削除後の再構築）
 
-Repository Tests
-CSV read/write
-
-Order handling
-
-Integration Tests
-create → list → delete flow
-
-Out of Scope
-Boards, Lists, Tasks
-
-Project renaming
-
-Project detail page
-
-Drag & Drop
-
-UI design polish
+projectId 不正時の redirect
 
 Notes
-This function.md defines only the /home (project list) feature.
-
-Additional features must be added as new branches with new function.md files.
+この function.md は Board 一覧ページの実装に限定する。
+Board 内の List/Task は別の function.md で扱う。
