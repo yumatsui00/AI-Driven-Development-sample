@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 "use client";
 
 import { useMemo, useState } from "react";
@@ -22,7 +21,7 @@ export default function LandingHeader({
   );
 
   return (
-    <header className="flex items-center justify-between px-6 py-4">
+    <header className="flex items-center justify-between gap-4 border-b border-ink-200/60 px-8 py-5">
       <div className="relative">
         <Button
           variant="ghost"
@@ -40,33 +39,37 @@ export default function LandingHeader({
         {open ? (
           <ul
             role="listbox"
-            className="absolute left-0 z-10 mt-2 w-28 rounded-md border border-ink-200 bg-white shadow-lg"
+            className="absolute left-0 z-10 mt-2 w-36 rounded-xl border border-ink-200 bg-white shadow-xl"
           >
             {(Object.keys(translation.languages) as Lang[]).map((code) => (
-              <li
-                key={code}
-                role="option"
-                aria-selected={code === lang}
-                className={cn(
-                  "cursor-pointer px-3 py-2 text-sm hover:bg-ink-100",
-                  code === lang && "bg-ink-100"
-                )}
-                onClick={() => {
-                  onChangeLang(code);
-                  setOpen(false);
-                }}
-              >
-                {translation.languages[code]}
+              <li key={code} className="border-t border-ink-100 first:border-t-0">
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={code === lang}
+                  className={cn(
+                    "flex w-full cursor-pointer px-3 py-2 text-left text-sm hover:bg-ink-100",
+                    code === lang && "bg-ink-100"
+                  )}
+                  onClick={() => {
+                    onChangeLang(code);
+                    setOpen(false);
+                  }}
+                >
+                  {translation.languages[code]}
+                </button>
               </li>
             ))}
           </ul>
         ) : null}
       </div>
       <div className="flex items-center gap-3">
-        <Button variant="ghost" className="border border-ink-200 bg-white">
+        <Button variant="ghost" size="lg" className="border border-ink-200 bg-white px-6">
           {translation.login}
         </Button>
-        <Button className="shadow-lg">{translation.signup}</Button>
+        <Button size="lg" className="px-8 shadow-xl shadow-ink-300/70">
+          {translation.signup}
+        </Button>
       </div>
     </header>
   );

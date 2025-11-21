@@ -24,7 +24,7 @@ This specification covers:
 # UI Requirements
 
 ## 1. Page Layout
-Use the following structure under `src/app/(public)/landing/page.tsx`:
+Use the following structure under the root route `src/app/page.tsx` (rendering the landing layout/component):
 
 - A full-width hero section
 - Centered tagline and short description
@@ -185,5 +185,4 @@ The following must NOT be implemented:
 - All component and utility files follow naming conventions
 - No logic outside logic directories (except i18n util)
 - Page is visually clean, modern, and responsive
-
 
