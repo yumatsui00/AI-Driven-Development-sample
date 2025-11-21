@@ -1,18 +1,20 @@
-import path from "path";
 import { readCsv } from "@/utils/csv/readCsv";
 import { writeCsv } from "@/utils/csv/writeCsv";
 import { generateId } from "@/utils/id";
 import type { AuthUser, SignupInput } from "@/types/auth";
 import { err, ok, type Result } from "@/types/result";
-
-const USERS_CSV = path.join("db", "users.csv");
-const USER_HEADER = ["id", "email", "password", "created_at"];
+import { getUsersCsvPath, USER_HEADER } from "./userStore";
 
 /**
  * Create a new user and persist into CSV.
  */
 export async function createUser(input: SignupInput): Promise<Result<{ id: string }>> {
-  const readResult = await readCsv(USERS_CSV, USER_HEADER as unknown as string[], true);
+  if (!input.password || input.password.trim().length === 0) {
+    return err("password_required");
+  }
+
+  const usersCsv = getUsersCsvPath();
+  const readResult = await readCsv(usersCsv, USER_HEADER, true);
   if (!readResult.ok) {
     return err("csv_read_failed");
   }
@@ -30,7 +32,7 @@ export async function createUser(input: SignupInput): Promise<Result<{ id: strin
   };
 
   const rows: Array<Record<string, string>> = [...readResult.value, newUser];
-  const writeResult = await writeCsv(USERS_CSV, USER_HEADER as unknown as string[], rows);
+  const writeResult = await writeCsv(usersCsv, USER_HEADER, rows);
   if (!writeResult.ok) {
     return err("csv_write_failed");
   }
