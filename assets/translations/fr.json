@@ -40,5 +40,17 @@
     "name_required": "Le nom du projet est requis.",
     "cancel": "Annuler",
     "delete": "Supprimer"
+  },
+  "boards": {
+    "title": "Tableaux",
+    "create": "Créer un tableau",
+    "create_button": "Nouveau tableau",
+    "name_placeholder": "Nom du tableau",
+    "empty": "Aucun tableau pour le moment. Créez-en un.",
+    "created_at": "Créé le",
+    "delete": "Supprimer",
+    "back": "Retour à l’accueil",
+    "error": "Une erreur est survenue. Réessayez.",
+    "cancel": "Annuler"
   }
 }
