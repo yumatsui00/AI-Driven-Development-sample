@@ -13,7 +13,7 @@ type BoardCardProps = {
  */
 export default function BoardCard({ board, translation }: BoardCardProps) {
   const created = new Date(board.createdAt).toLocaleDateString();
-  const href = `/projects/${board.projectId}/boards/${board.id}/lists`;
+  const href = `/boards/${board.id}`;
   return (
     <Card>
       <CardHeader className="pb-2">

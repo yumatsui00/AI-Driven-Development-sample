@@ -51,6 +51,29 @@
     "delete": "Supprimer",
     "back": "Retour à l’accueil",
     "error": "Une erreur est survenue. Réessayez.",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "loading": "Chargement du tableau..."
+  },
+  "lists": {
+    "title": "Listes",
+    "add": "Ajouter une liste",
+    "name_placeholder": "Nom de la liste",
+    "empty": "Aucune liste pour le moment. Ajoutez-en pour démarrer.",
+    "delete": "Supprimer la liste",
+    "error": "Échec de l’opération sur la liste."
+  },
+  "tasks": {
+    "add": "Ajouter une tâche",
+    "title_placeholder": "Titre de la tâche",
+    "description_placeholder": "Description",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "delete": "Supprimer la tâche",
+    "empty": "Aucune tâche.",
+    "create_error": "Échec de création de la tâche.",
+    "update_error": "Échec de mise à jour de la tâche.",
+    "move_error": "Échec du déplacement de la tâche.",
+    "reorder_error": "Échec du réordonnancement."
   }
 }

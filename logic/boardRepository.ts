@@ -108,3 +108,16 @@ export async function deleteBoard(id: string): Promise<Result<null>> {
   }
   return ok(null);
 }
+
+export async function getBoardById(id: string): Promise<Result<Board | null>> {
+  const csvPath = getBoardsCsvPath();
+  const readResult = await readCsv(csvPath, BOARD_HEADER as unknown as string[], true);
+  if (!readResult.ok) return err("csv_read_failed");
+  const rows = readResult.value as BoardRow[];
+  const found = rows.find((row) => row.id === id);
+  return ok(found ? toBoard(found) : null);
+}
+
+export function getBoardsCsv(): string {
+  return getBoardsCsvPath();
+}

@@ -1,149 +1,214 @@
-# Function: Board List Page  
-`/projects/[projectId]/boards`
+📌 概要
 
-## Purpose
-Projectをクリックしたときに遷移する「Board一覧ページ」を作成する。  
-Board の一覧表示、作成、削除ができる最小構成とする。
+この仕様では、/boards/[boardId] ページで List（カラム）と Task（カード）を管理する UI とロジックを実装する。
 
----
+UI は Trello を参考にしており、shadcn/ui + TailwindCSS を使用する。
 
-## Scope
+このページでは以下を行う：
 
-### この機能に含むもの
-- `/projects/[projectId]/boards` ページ作成
-- projectId に紐づく board 一覧表示
-- board の新規作成
-- board の削除
-- Project名の表示（任意）
-- 戻るボタン（Homeへ）
+Board に紐づく List の一覧表示
 
-### 含まないもの
-- Board を開いた中身（List/Task）
-- ドラッグ＆ドロップ
-- Board の編集・並び替え
+List の作成・削除
 
----
+List 内に Task を作成
 
-## Page Behavior
+Task の編集（title + description）
 
-### 1. ルーティング
-`/projects/[projectId]/boards`
+Task のドラッグ＆ドロップによる移動（List 間 / List 内）
 
-### 2. 認証リダイレクト
-- 未ログイン → `/` へ redirect
-- ログイン済み → 続行
+Task の並び順（order）更新
 
-### 3. projectId の検証
-- `projects.csv` から `projectId` の存在確認
-- 存在しなければ `/home` へ redirect（※安全性のため）
+Task の削除
 
-### 4. board 一覧
-- `listBoards(projectId)` を呼ぶ
-- `order` 昇順で表示
-- カード UI（shadcn/ui）で一覧表示
+🎨 1. ワイヤーフレーム（ドラッグ＆ドロップ対応）
++---------------------------------------------------------------+
+|  Board Name                                  [Add List]       |
++---------------------------------------------------------------+
 
-### 5. board 作成
-- 名前入力 → createBoard(name, projectId)
-- CSV 追記
-- 成功時に再フェッチ／再描画
+   horizontally scrollable area
+   ┌────────────────────┐  ┌────────────────────┐  ┌────────────────────┐
+   │ LIST: "To Do"      │  │ LIST: "Doing"       │  │ LIST: "Done"        │
+   ├────────────────────┤  ├────────────────────┤  ├────────────────────┤
+   │ [ + Add Task ]     │  │ [ + Add Task ]      │  │ [ + Add Task ]      │
+   │────────────────────│  │────────────────────│  │────────────────────│
+   │  ● Task A           │  │  ● Task C           │  │  ● Task F           │
+   │  (draggable)        │  │  (draggable)        │  │  (draggable)        │
+   │                     │  │                     │  │                     │
+   │  ● Task B           │  │  ● Task D           │  │  ● Task G           │
+   │  (draggable)        │  │  (draggable)        │  │  (draggable)        │
+   │────────────────────│  │────────────────────│  │────────────────────│
+   │ [ ⋮ ] menu          │  │ [ ⋮ ] menu          │  │ [ ⋮ ] menu          │
+   └────────────────────┘  └────────────────────┘  └────────────────────┘
 
-### 6. board 削除
-- 削除アイコンを押すと deleteBoard(id)
-- 確認ダイアログは入れない（MVPのため）
+🧲 2. Drag and Drop ライブラリ仕様
 
----
+Next.js + shadcn/ui で相性がよいため、以下を採用：
 
-## CSV Schema（boards.csv）
-id, project_id, name, created_at, updated_at, order
+✅ @dnd-kit/core
 
-yaml
-Copy code
+軽量
 
-### Rules
-- id: UUIDv4  
-- project_id: string  
-- name: string  
-- order: number（昇順に表示）  
-- created_at / updated_at: ISO8601  
-- UTF-8 / LF  
-- クオート禁止  
-- NULL 禁止（空文字許可）
+TypeScript 完備
 
----
+SSR 安全
 
-## Type Definitions（`types/board.ts`）
-```ts
-export interface Board {
-  id: string;
-  projectId: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-  order: number;
-}
-Repository / Logic
-listBoards(projectId: string): Result<Board[]>
-CSVを読み込む
+List 内 / List 間 の移動に最適
 
-project_id でフィルタ
+使用コンポーネント：
 
-order昇順に並べる
+<DndContext>
 
-createBoard(name: string, projectId: string): Result<Board>
-UUID作成
+<SortableContext>
 
-order = 最後の order + 1
+useSortable
 
-createdAt / updatedAt = now()
+<DragOverlay>
 
-CSVへ追記
+🗂 3. CSV スキーマ（List / Task）
 
-deleteBoard(id: string): Result<null>
-id に一致する行のみ除去した CSV を再生成
+変更なし。ただし order の更新が頻発するので必須。
 
-Components
-BoardCard.tsx
-Boardの名前と作成日時を表示
+lists.csv
+id, board_id, name, created_at, order
 
-クリックで /projects/[projectId]/boards/[boardId]/lists に行く（※次フェーズ）
+tasks.csv
+id, list_id, title, description, created_at, updated_at, order
 
-BoardCreateDialog.tsx
-名前入力欄
+🧠 4. ロジック関数（logic/）— D&D 追加あり
+LIST — 変更なし
 
-キャンセル / 作成ボタン
+createList
 
-ProjectHeader.tsx
-Project名表示
+deleteList
 
-“Back to Home” ボタン
+getLists
 
-Language selector（共通 Header 使用）
+TASK — D&D に伴う追加・修正
+🆕 reorderTasksWithinList(listId: string, taskIdsInOrder: string[]): Result<null>
 
-Translations（必要なキー）
-pgsql
-Copy code
-boards.title
-boards.create
-boards.create_button
-boards.name_placeholder
-boards.empty
-boards.created_at
-boards.delete
-boards.back
-Routing
-bash
-Copy code
-/home
-/projects/[projectId]/boards
-Tests（次のPRで追加）
-listBoards（正しいソート）
+List 内でドラッグして並び順を変えた際に使う。
 
-createBoard（order の算出、timestamp）
+仕様
 
-deleteBoard（削除後の再構築）
+taskIdsInOrder の index がそのまま order になる
 
-projectId 不正時の redirect
+すべての該当タスクの order を一括更新
 
-Notes
-この function.md は Board 一覧ページの実装に限定する。
-Board 内の List/Task は別の function.md で扱う。
+CSV 全書き換え方式で実装
+
+🆕 moveTaskDnd(taskId: string, fromListId: string, toListId: string, newIndex: number): Result<Task>
+
+List 間の移動時に使用。
+
+仕様
+
+task の list_id を toListId に更新
+
+order = newIndex
+
+newIndex 以降のタスクは order を +1 にシフト
+
+fromList と toList の両方で order の整合性を保つ
+
+既存関数
+
+createTask
+
+updateTask
+
+deleteTask
+
+🖥 5. UI コンポーネント構造
+components/board/
+  BoardPage.tsx               ← DndContext をここに配置
+  ListColumn.tsx
+  TaskCard.tsx                ← useSortable() を使用
+  AddTaskButton.tsx
+  AddListButton.tsx
+
+BoardPage.tsx の責務
+
+lists と tasks を読み込む
+
+DndContext を配置
+
+dragStart / dragEnd をハンドリングして logic 層を呼ぶ
+
+ListColumn.tsx
+
+SortableContext を置く
+
+List 内の taskId 配列を context に渡す
+
+TaskCard.tsx
+
+useSortable() により draggable 化
+
+overlay 時の見た目も設定
+
+🔄 6. Drag & Drop の動作仕様（超重要）
+▶ List 内移動（reorder）
+
+user が List 内で Task を上下にドラッグ
+
+DndContext の onDragEnd で
+
+fromListId と toListId が同じ
+
+並び順を更新
+
+reorderTasksWithinList(listId, taskIdsInOrder) を呼ぶ
+
+CSV 更新 → UI 再描画
+
+▶ List 間移動（move）
+
+user が Task を別 List にドラッグ
+
+onDragEnd 判定 → listId が変わっている
+
+moveTaskDnd(taskId, fromListId, toListId, newIndex) を呼ぶ
+
+CSV 更新 → UI 再描画
+
+🚦 7. テスト仕様（D&D 対応）
+UNIT
+
+reorderTasksWithinList
+
+moveTaskDnd
+
+INTEGRATION
+
+listA に task を複数作成
+
+並び替え → CSV の order が更新されているか
+
+listB にタスク移動 → listId が変わり、order の整合性が保たれているか
+
+✔️ 8. 完了条件
+
+Task をマウスで List 内 / List 間に自由にドラッグできる
+
+CSV 上でも order が正しく更新される
+
+UI の見た目が崩れない
+
+TypeScript strict OK
+
+throw 禁止（Result 型のみ）
+
+🔥 9. 次のアクション（ちゃっぴ君の提案）
+
+これを現在の function.md に 完全置き換え
+
+AGENTS.md も “Drag & Drop対応” に更新
+
+ブランチ名は
+
+feature/board-dnd
+
+
+Codex に “D&D 対応 Board 実装お願いします” と依頼
+
+PR → AIレビュー → 修正 → テスト作成
