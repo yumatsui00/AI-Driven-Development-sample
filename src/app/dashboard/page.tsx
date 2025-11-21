@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { loadTranslation } from "@/utils/i18n";
+import { getStoredLang } from "@/utils/lang";
 
 type Session = {
   login: boolean;
@@ -17,7 +18,8 @@ type Session = {
  */
 export default function DashboardPage() {
   const router = useRouter();
-  const translation = loadTranslation("en");
+  const [lang, setLang] = useState(() => getStoredLang("en"));
+  const translation = useMemo(() => loadTranslation(lang), [lang]);
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
