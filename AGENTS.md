@@ -24,6 +24,7 @@ This project is a Trello-like web app, but the true goal is an AI-driven develop
 
 ## Component & Logic Boundaries
 - Page components contain no business logic. Place domain logic in `logic/`; domain UI goes under `src/components/<domain>`; hooks manage local form/state; keep components single-responsibility.
+- UI がサーバー状態を更新する場合は `app/api/**/route.ts` の API 経由で `logic/` を呼び出す。API ルート名は `route.ts` 固定。
 
 ## Tests
 - Add tests after features stabilize. Test only logic (no UI tests): unit tests for pure functions, repository tests for CSV IO, and integration for task/project flows (create → CSV → read → delete). Place tests in `tests/` mirroring `logic/` and `src/utils/`.

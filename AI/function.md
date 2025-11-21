@@ -156,6 +156,8 @@ logic/auth/
   verifyCredentials.ts
 ```
 
+UI からは `app/api/auth/*/route.ts` を経由してこれらの関数を呼び出す（直接 CSV に触れない）。
+
 ## 1. createUser.ts
 Input: `{ email: string; password: string }`  
 Actions:
@@ -250,4 +252,3 @@ Code must:
 - No JWT or backend auth
 - No rate limiting
 - No API endpoints
-
