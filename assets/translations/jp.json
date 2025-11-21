@@ -1,0 +1,15 @@
+{
+  "appName": "AI Boards",
+  "tagline": "AI の速度でアイデアを整理",
+  "description": "AI 支援のワークフローと CSV に優しいデータ設計を備えた Trello ライクな体験です。",
+  "cta": "今すぐ始める",
+  "login": "ログイン",
+  "signup": "サインアップ",
+  "language": "言語",
+  "languages": {
+    "jp": "日本語",
+    "en": "英語",
+    "fr": "フランス語"
+  },
+  "aiSummary": "AI 駆動開発の雛形。base.txt・AGENTS.md・AI/DEVELOPMENT.md にルールを集約し、コード・テスト・CSV 運用を一貫させています。"
+}
