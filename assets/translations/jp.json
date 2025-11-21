@@ -27,5 +27,18 @@
     "sessionMissing": "セッションが見つかりません。リダイレクトします。",
     "duplicatedEmail": "このメールは既に登録されています。",
     "invalidCredentials": "メールまたはパスワードが正しくありません。"
+  },
+  "projects": {
+    "title": "あなたのプロジェクト",
+    "create": "プロジェクト作成",
+    "create_button": "新規プロジェクト",
+    "name_placeholder": "プロジェクト名",
+    "empty": "まだプロジェクトがありません。まずは作成しましょう。",
+    "logout": "ログアウト",
+    "created_at": "作成日",
+    "error": "エラーが発生しました。やり直してください。",
+    "name_required": "プロジェクト名は必須です。",
+    "cancel": "キャンセル",
+    "delete": "削除"
   }
 }

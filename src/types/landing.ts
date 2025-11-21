@@ -26,6 +26,19 @@ export interface TranslationObject {
     duplicatedEmail: string;
     invalidCredentials: string;
   };
+  projects: {
+    title: string;
+    create: string;
+    create_button: string;
+    name_placeholder: string;
+    empty: string;
+    logout: string;
+    created_at: string;
+    error: string;
+    name_required: string;
+    cancel: string;
+    delete: string;
+  };
 }
 
 export interface LandingHeaderProps {

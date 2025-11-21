@@ -27,5 +27,18 @@
     "sessionMissing": "Session introuvable. Redirection...",
     "duplicatedEmail": "Cet email est déjà enregistré.",
     "invalidCredentials": "Email ou mot de passe invalide."
+  },
+  "projects": {
+    "title": "Vos projets",
+    "create": "Créer un projet",
+    "create_button": "Nouveau projet",
+    "name_placeholder": "Nom du projet",
+    "empty": "Aucun projet pour l’instant. Créez-en un premier.",
+    "logout": "Se déconnecter",
+    "created_at": "Créé le",
+    "error": "Une erreur est survenue. Réessayez.",
+    "name_required": "Le nom du projet est requis.",
+    "cancel": "Annuler",
+    "delete": "Supprimer"
   }
 }
