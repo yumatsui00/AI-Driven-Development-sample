@@ -51,6 +51,29 @@
     "delete": "削除",
     "back": "ホームに戻る",
     "error": "エラーが発生しました。やり直してください。",
-    "cancel": "キャンセル"
+    "cancel": "キャンセル",
+    "loading": "ボードを読み込み中..."
+  },
+  "lists": {
+    "title": "リスト",
+    "add": "リストを追加",
+    "name_placeholder": "リスト名",
+    "empty": "まだリストがありません。追加して整理を始めましょう。",
+    "delete": "リストを削除",
+    "error": "リストの操作に失敗しました。"
+  },
+  "tasks": {
+    "add": "タスクを追加",
+    "title_placeholder": "タスク名",
+    "description_placeholder": "詳細",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "edit": "編集",
+    "delete": "タスクを削除",
+    "empty": "タスクがありません。",
+    "create_error": "タスクの作成に失敗しました。",
+    "update_error": "タスクの更新に失敗しました。",
+    "move_error": "タスクの移動に失敗しました。",
+    "reorder_error": "タスクの並び替えに失敗しました。"
   }
 }

@@ -28,6 +28,8 @@ export function loadTranslation(lang: Lang): TranslationObject {
     aiSummary: selected.aiSummary ?? base.aiSummary,
     auth: selected.auth ?? base.auth,
     projects: selected.projects ?? base.projects,
-    boards: selected.boards ?? base.boards
+    boards: selected.boards ?? base.boards,
+    lists: selected.lists ?? base.lists,
+    tasks: selected.tasks ?? base.tasks
   };
 }

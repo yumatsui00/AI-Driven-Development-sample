@@ -51,6 +51,29 @@
     "delete": "Delete",
     "back": "Back to Home",
     "error": "Something went wrong. Please try again.",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "loading": "Loading board..."
+  },
+  "lists": {
+    "title": "Lists",
+    "add": "Add list",
+    "name_placeholder": "List name",
+    "empty": "No lists yet. Add one to start organizing.",
+    "delete": "Delete list",
+    "error": "Failed to load or update lists."
+  },
+  "tasks": {
+    "add": "Add task",
+    "title_placeholder": "Task title",
+    "description_placeholder": "Description",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete task",
+    "empty": "No tasks yet.",
+    "create_error": "Failed to create task.",
+    "update_error": "Failed to update task.",
+    "move_error": "Failed to move task.",
+    "reorder_error": "Failed to reorder tasks."
   }
 }
