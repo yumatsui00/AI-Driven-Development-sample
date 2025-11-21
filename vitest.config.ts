@@ -6,7 +6,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node",
-    include: ["tests/**/*.test.ts"],
-    threads: false
+    include: ["tests/**/*.test.ts"]
   }
 });
