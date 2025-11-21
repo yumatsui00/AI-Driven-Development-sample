@@ -1,262 +1,235 @@
-# Function Specification: User Signup & Login Feature
+# Function Specification: Login-Gated Routing & /home Page
 
-This document defines the requirements and implementation rules for the user signup and login system.  
-All rules in AGENTS.md must be strictly followed.  
-This feature implements a minimal authentication flow using CSV-based storage and localStorage session handling.
+This function.md defines the authenticated routing and the `/home` protected page.  
+All rules in AGENTS.md must be followed strictly.  
+Authentication is localStorage-based and NOT secure; it is only for development scaffolding.
 
 ---
 
 # Purpose
-Provide a simple authentication mechanism for the application, enabling:
-- Account creation (email + password)
-- Login with existing credentials
-- Local session persistence
-- Access control (only logged-in users can visit protected pages)
 
-This is not a security-focused system; it is only for AI-driven development scaffolding.
+Implement a simple authenticated routing system:
 
-## Scope
-This specification covers:
-- Signup and login UI pages
-- Dashboard guard behavior
-- Translation handling for auth UI, including language preference persistence in localStorage (default to English when absent)
-- UI component construction following AGENTS.md rules
-- No password hashing or external auth
+- `/home` → requires login  
+- `(authenticated)/home/page.tsx` → only logged-in users can see  
+- `(public)/...` → only non-logged-in users should see  
+- Redirection rules depending on login state  
+- Landing page CTA (“Start Now”) behavior:
+  - Logged-in → `/home`
+  - Logged-out → `/login`
+
+Authentication state is stored only in `localStorage.session`.
 
 ---
 
-# Files & Directories
+# Directory Structure
 
-## CSV Storage
-Create:
+Create directories:
 
 ```
-db/users.csv
+src/app/(authenticated)/home/page.tsx
+src/app/(public)/...
+src/middleware.ts
+src/utils/session.ts
 ```
 
-### CSV Columns
-```
-id,email,password,created_at
-```
-
-### Rules
-- `id` is UUIDv4 (string)
-- Emails must be unique
-- Password is stored as plain text (no hashing)
-- `created_at` is ISO string
-- Never use null/undefined. Empty string only.
-- No quotes around values
-- LF (`\n`) only
+The middleware will enable client-side-like gating at route boundaries.
 
 ---
 
-# UI Requirements
+# Session Specification
 
-## 1. Signup Page
-Location:
-
-```
-src/app/(public)/signup/page.tsx
-```
-
-UI with fields:
-- Email input
-- Password input
-- Signup button
-
-Validation:
-- Email required
-- Password required
-- If email already exists → error message
-
-On success:
-- Save user to CSV via logic layer
-- Redirect to `/login`
-
-Use shadcn/ui components:
-- `<Input>`
-- `<Label>`
-- `<Button>`
-- `<Card>` container
-
----
-
-## 2. Login Page
-
-Location:
-
-```
-src/app/(public)/login/page.tsx
-```
-
-UI with:
-- Email input
-- Password input
-- Login button
-
-Behavior:
-- If credentials match → Save session to localStorage:
+Session stored in localStorage:
 
 ```json
 {
   "login": true,
-  "userId": "UUID",
-  "email": "user@example.com"
+  "userId": "string",
+  "email": "string"
 }
 ```
 
-- Redirect to `/dashboard`
-- If mismatch → show error
+- `"login": true` is the indicator
+- No expiration required
+- Logout clears session
 
 ---
 
-## 3. Protected Page (Dashboard)
+# Routing Rules
 
-Create a simple placeholder page:
+## 1. Authenticated Zone: `/home`
+- Only accessible if `localStorage.session.login === true`
+- Otherwise redirect to `/`
+
+Located under:
 
 ```
-src/app/dashboard/page.tsx
+src/app/(authenticated)/home/page.tsx
 ```
+
+This file **must be a client component** (`"use client"`).
+
+---
+
+## 2. Public Zone: `(public)`
+Includes:
+- Landing page `/`
+- `/login`
+- `/signup`
 
 Rules:
-- If `localStorage.login !== true` → redirect to `/`
-- Display a simple greeting using the logged-in email address
-- Include logout button  
-  → on click: `localStorage.clear()` → `router.push("/")`
-
-This page must be **client-side only** (`"use client"`).
+- If a logged-in user tries to access any public route → redirect to `/home`
 
 ---
 
-# Component Structure
+## 3. Redirect Logic Summary
 
-Follow AGENTS.md component rules.
+| 状態 | アクセス先 | 結果 |
+|------|------------|-------|
+| 未ログイン | /home | `/` に強制リダイレクト |
+| ログイン済み | /login, /signup, / など public | `/home` に強制リダイレクト |
+| LandingPage Start Now | ログイン済み | `/home` |
+| LandingPage Start Now | 未ログイン | `/login` |
 
-Components:
+---
+
+# Middleware Requirements
+
+Create `src/middleware.ts`.
+
+### Rules:
+- Middleware **MUST NOT read localStorage** (server-side)
+- Instead, allow all requests and rely on client-side redirect
+
+Thus, middleware does NOT enforce redirects.  
+Redirection is entirely client-side using hooks inside layout wrappers.
+
+Middleware is only used to declare route groups:
+
+```ts
+export const config = {
+  matcher: ["/((authenticated)/:path*)", "/((public)/:path*)"]
+};
+```
+
+No business logic in middleware.
+
+---
+
+# Client-Side Redirect Enforcement
+
+Create:
 
 ```
-src/components/auth/
-  SignupForm.tsx
-  LoginForm.tsx
+src/components/auth/RequireAuth.tsx
+src/components/auth/RedirectIfLoggedIn.tsx
 ```
 
-Each:
-- Receives translations as props
-- Emits onSuccess callbacks
-- Contains no business logic (validation + UI only)
+### `RequireAuth`
+- Used in `(authenticated)` layout
+- On mount:
+  - if session.login !== true → `router.replace("/")`
+- Render children if logged in
 
-Type definitions:
+### `RedirectIfLoggedIn`
+- Used in `(public)` layout
+- On mount:
+  - if session.login === true → `router.replace("/home")`
+
+Both must be `"use client"` components.
+
+---
+
+# Home Page Requirements
+
+Create:
 
 ```
-src/types/auth.ts
+src/app/(authenticated)/home/page.tsx
+```
+
+### Requirements:
+- `"use client"`
+- Use `RequireAuth` wrapper inside layout OR directly
+- Display:
+  - User greeting
+  - Logout button
+- Logout clears session + redirect to `/`
+
+Example structure (not code):
+
+```
+<HomeLayout>
+  <RequireAuth>
+     <HomePageContent />
+  </RequireAuth>
+</HomeLayout>
 ```
 
 ---
 
-# Logic Requirements
-
-All business logic must be stored under:
+# Public Layout Requirements
 
 ```
-logic/auth/
-  createUser.ts
-  findUserByEmail.ts
-  verifyCredentials.ts
+src/app/(public)/layout.tsx
 ```
 
-UI からは `app/api/auth/*/route.ts` を経由してこれらの関数を呼び出す（直接 CSV に触れない）。
+Use `RedirectIfLoggedIn` to block logged-in users from accessing public pages.
 
-## 1. createUser.ts
-Input: `{ email: string; password: string }`  
-Actions:
-- Load CSV
-- Check for email duplication
-- Insert new row with UUIDv4 and timestamp
-- Save CSV
-- Return `Result<{ id: string }>` (never throw)
-
-## 2. findUserByEmail.ts
-Search users.csv by email  
-Return `Result<User | null>`
-
-## 3. verifyCredentials.ts
-Input: email, password  
-Logic:
-- findUserByEmail
-- Compare plain-text password
-- Return success/failure via Result type
+Should wrap all pages under `(public)`.
 
 ---
 
-# CSV Reading/Writing
-Must use only:
+# LandingPage Start Now Behavior
+
+Inside `LandingHero.tsx`:
+
+- Add a button: “Start Now”
+- On click:
 
 ```
-utils/csv/readCsv.ts
-utils/csv/writeCsv.ts
+if (session.login === true) router.push("/home")
+else router.push("/login")
 ```
 
-Never access fs directly from logic.
+This requires `"use client"` in LandingHero.
+
+Text comes from translation JSON.
 
 ---
 
-# Session Handling
-Client-side only:
+# Utils
 
-- `localStorage.setItem("session", JSON.stringify({...}))`
-- `localStorage.removeItem("session")` for logout
-- Protected components check this session object
+## `src/utils/session.ts`
 
-No cookies, no tokens, no encryption.
+### Exports:
+- `getSession(): Session | null`
+- `setSession(data: Session): void`
+- `clearSession(): void`
+- Type definitions stored in `src/types/auth.ts`
 
----
-
-# Error Handling (strict)
-All logic functions return:
-
-```
-Result<T>
-```
-
-Rules:
-- No exceptions thrown
-- UI handles errors
-- Error messages short & English only (e.g., `"email_exists"`, `"invalid_credentials"`)
+Session must be read only inside client components.
 
 ---
 
 # Acceptance Criteria
 
-Signup:
-- When email is unique → CSVに保存 / redirect to login
-
-Signup error:
-- Existing email → UI shows error  
-- CSV is unchanged
-
-Login:
-- Matching credentials → session saved / redirect to dashboard
-- Mismatch → error message
-
-Dashboard:
-- Requires login
-- load welcome message
-- logout clears session & redirects home
-
-Code must:
-- Follow AGENTS.md naming conventions
-- Follow TypeScript strict mode
-- Separate logic, UI, utils
-- Use Shadcn UI components
-- Include full JSDoc on functions
-- Zero thrown exceptions
+- `/home` cannot be accessed without login → redirect to `/`
+- Public pages cannot be accessed when logged in → redirect to `/home`
+- Start Now redirects according to login state
+- Home page loads user data from session
+- Logout works correctly
+- No sensitive logic in middleware
+- All redirects must be **client-side only**
+- All files follow TypeScript strict, naming rules, directory rules from AGENTS.md
+- No thrown exceptions in logic
 
 ---
 
 # Out of Scope
-- No password hashing
-- No email verification
-- No real security
-- No JWT or backend auth
-- No rate limiting
-- No API endpoints
+- No server-side authentication
+- No JWT
+- No HTTP-only cookies
+- No user roles
+- No API routes
+

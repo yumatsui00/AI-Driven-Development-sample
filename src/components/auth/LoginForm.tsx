@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { AuthTranslations, LoginInput } from "@/types/auth";
+import { setSession } from "@/utils/session";
 
 type LoginFormProps = {
   translation: AuthTranslations;
@@ -45,11 +46,8 @@ export default function LoginForm({ translation }: LoginFormProps) {
         setError(translation.auth.invalidCredentials);
         return;
       }
-      localStorage.setItem(
-        "session",
-        JSON.stringify({ login: true, userId: data.user.id, email: data.user.email })
-      );
-      router.push("/dashboard");
+      setSession({ login: true, userId: data.user.id, email: data.user.email });
+      router.push("/home");
     } catch (e) {
       setError(translation.auth.invalidCredentials);
     } finally {
