@@ -38,6 +38,7 @@
     "created_at": "Créé le",
     "error": "Une erreur est survenue. Réessayez.",
     "name_required": "Le nom du projet est requis.",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "delete": "Supprimer"
   }
 }

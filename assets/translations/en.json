@@ -38,6 +38,7 @@
     "created_at": "Created",
     "error": "Something went wrong. Please try again.",
     "name_required": "Project name is required.",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "delete": "Delete"
   }
 }

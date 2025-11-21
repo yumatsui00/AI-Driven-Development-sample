@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { Session } from "@/types/auth";
+import type { Lang } from "@/types/landing";
 import { loadTranslation } from "@/utils/i18n";
 import { clearSession, getSession } from "@/utils/session";
 import { getStoredLang, setStoredLang } from "@/utils/lang";
@@ -171,7 +172,7 @@ export default function HomePage() {
                       className="absolute right-3 top-3 hidden rounded-md border border-red-200 bg-white px-2 py-1 text-xs text-red-600 shadow-sm group-hover:block"
                       onClick={() => handleDelete(project.id)}
                     >
-                      Delete
+                      {translation.projects.delete}
                     </button>
                   </div>
                 ))}
