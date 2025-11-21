@@ -25,6 +25,7 @@ export function loadTranslation(lang: Lang): TranslationObject {
     signup: selected.signup ?? base.signup,
     language: selected.language ?? base.language,
     languages: selected.languages ?? base.languages,
-    aiSummary: selected.aiSummary ?? base.aiSummary
+    aiSummary: selected.aiSummary ?? base.aiSummary,
+    auth: selected.auth ?? base.auth
   };
 }

@@ -1,188 +1,254 @@
-# Function Specification: Landing Page Design
+# Function Specification: User Signup & Login Feature
 
-This function.md describes the landing page UI implementation for the `landingpage-design` branch.  
-No backend logic, DB interaction, or authentication implementation is required.  
-Only UI, i18n handling, and component structure must be created.
+This document defines the requirements and implementation rules for the user signup and login system.  
+All rules in AGENTS.md must be strictly followed.  
+This feature implements a minimal authentication flow using CSV-based storage and localStorage session handling.
 
-## Purpose
-Create a stylish, modern landing page for the AI-driven Trello-like app.  
-This page serves as the app’s public entry and provides:
-- Introduction and visual appeal
-- Links to login / sign-up (UI only)
-- Language switcher (functional only for UI text replacement)
+---
 
-## Scope
-This specification covers:
-- Landing page layout and visuals
-- Header with language switcher + login / sign-up buttons
-- Translation loading mechanism (client-side only)
-- UI component construction following AGENTS.md rules
-- No DB writes, no user authentication, no real account processing
+# Purpose
+Provide a simple authentication mechanism for the application, enabling:
+- Account creation (email + password)
+- Login with existing credentials
+- Local session persistence
+- Access control (only logged-in users can visit protected pages)
+
+This is not a security-focused system; it is only for AI-driven development scaffolding.
+
+---
+
+# Files & Directories
+
+## CSV Storage
+Create:
+
+```
+db/users.csv
+```
+
+### CSV Columns
+```
+id,email,password,created_at
+```
+
+### Rules
+- `id` is UUIDv4 (string)
+- Emails must be unique
+- Password is stored as plain text (no hashing)
+- `created_at` is ISO string
+- Never use null/undefined. Empty string only.
+- No quotes around values
+- LF (`\n`) only
 
 ---
 
 # UI Requirements
 
-## 1. Page Layout
-Use the following structure under the root route `src/app/page.tsx` (rendering the landing layout/component):
+## 1. Signup Page
+Location:
 
-- A full-width hero section
-- Centered tagline and short description
-- A CTA button (e.g., "Start now")
-- Clean, minimalistic Shadcn UI components
-- Light mode only（ダークモード不要）
-- Responsive design (tailwind default utilities)
+```
+src/app/(public)/signup/page.tsx
+```
 
-Design should appear similar to modern SaaS landing pages, with:
-- Spacious layout  
-- Big bold headline  
-- Minimal iconography  
-- Soft shadows（tailwind shadow-lg程度）
+UI with fields:
+- Email input
+- Password input
+- Signup button
+
+Validation:
+- Email required
+- Password required
+- If email already exists → error message
+
+On success:
+- Save user to CSV via logic layer
+- Redirect to `/login`
+
+Use shadcn/ui components:
+- `<Input>`
+- `<Label>`
+- `<Button>`
+- `<Card>` container
 
 ---
 
-# Header Requirements
+## 2. Login Page
 
-## 2. Header UI
-Place a header at the top of the page with:
-
-### Left side（画面左上）
-- **Language selector (button icon + dropdown)**  
-  - Options: `JP`, `EN`, `FR`
-  - Use client-side state
-  - Selection changes text by loading JSON from `assets/translations`
-
-### Right side（画面右上）
-- **Login button**
-- **Sign up button**
-
-Buttons should use Shadcn UI:
-- `<Button variant="ghost">` for Login
-- `<Button variant="default">` for Sign Up
-
-NO routing implementation is required.  
-Buttons may have `href="#"` or placeholder onClick.
-
----
-
-# Translation Requirements
-
-## 3. Translation Files
-Create translation files:
+Location:
 
 ```
-assets/translations/jp.json
-assets/translations/en.json
-assets/translations/fr.json
+src/app/(public)/login/page.tsx
 ```
 
-Each file should include at least:
+UI with:
+- Email input
+- Password input
+- Login button
+
+Behavior:
+- If credentials match → Save session to localStorage:
 
 ```json
 {
-  "appName": "XXX",
-  "tagline": "XXX",
-  "description": "XXX",
-  "cta": "XXX",
-  "login": "Login",
-  "signup": "Sign Up",
-  "language": "Language"
+  "login": true,
+  "userId": "UUID",
+  "email": "user@example.com"
 }
 ```
 
-The text can be dummy; content is not important here.  
-UI must dynamically switch between JSON values.
-
-Implement a simple translation loader:
-
-- Load all JSON statically (import)
-- Keep selected language in component state
-- Provide a utility function: `src/utils/i18n.ts`
-
-No external libraries (e.g., i18next) allowed unless added to requirements.txt.
+- Redirect to `/dashboard`
+- If mismatch → show error
 
 ---
 
-# Component Structure Requirements
+## 3. Protected Page (Dashboard)
 
-## 4. Components
-Follow AGENTS.md rules strictly:
+Create a simple placeholder page:
 
 ```
-src/
-  components/
-    landing/
-      LandingHeader.tsx
-      LandingHero.tsx
-      LandingLayout.tsx
+src/app/dashboard/page.tsx
 ```
 
-- `LandingHeader.tsx`  
-  Contains language selector + login/sign-up buttons.
+Rules:
+- If `localStorage.login !== true` → redirect to `/`
+- Display a simple greeting using the logged-in email address
+- Include logout button  
+  → on click: `localStorage.clear()` → `router.push("/")`
 
-- `LandingHero.tsx`  
-  Contains title, description, CTA button.
+This page must be **client-side only** (`"use client"`).
 
-- `LandingLayout.tsx`  
-  Wraps header + hero. No business logic.
+---
 
-All components:
-- Should be functional components
-- Must include JSDoc comments
-- Use TypeScript strict types
-- Props types stored in `src/types/landing.ts`
+# Component Structure
+
+Follow AGENTS.md component rules.
+
+Components:
+
+```
+src/components/auth/
+  SignupForm.tsx
+  LoginForm.tsx
+```
+
+Each:
+- Receives translations as props
+- Emits onSuccess callbacks
+- Contains no business logic (validation + UI only)
+
+Type definitions:
+
+```
+src/types/auth.ts
+```
 
 ---
 
 # Logic Requirements
 
-## 5. i18n Handling (client-side only)
-Implement `src/utils/i18n.ts`:
+All business logic must be stored under:
 
-- `loadTranslation(lang: Lang): TranslationObject`
-- Synchronous import only
-- No async FS, no external API calls
-
-Type definitions:
-
-```ts
-export type Lang = 'jp' | 'en' | 'fr';
-
-export interface TranslationObject {
-  appName: string;
-  tagline: string;
-  description: string;
-  cta: string;
-  login: string;
-  signup: string;
-  language: string;
-}
+```
+logic/auth/
+  createUser.ts
+  findUserByEmail.ts
+  verifyCredentials.ts
 ```
 
-State management:
-- Use `useState` inside layout/landing page
-- Pass translations down as props
+UI からは `app/api/auth/*/route.ts` を経由してこれらの関数を呼び出す（直接 CSV に触れない）。
+
+## 1. createUser.ts
+Input: `{ email: string; password: string }`  
+Actions:
+- Load CSV
+- Check for email duplication
+- Insert new row with UUIDv4 and timestamp
+- Save CSV
+- Return `Result<{ id: string }>` (never throw)
+
+## 2. findUserByEmail.ts
+Search users.csv by email  
+Return `Result<User | null>`
+
+## 3. verifyCredentials.ts
+Input: email, password  
+Logic:
+- findUserByEmail
+- Compare plain-text password
+- Return success/failure via Result type
 
 ---
 
-# Out of Scope
-The following must NOT be implemented:
-- Real authentication
-- Real routing to dashboard
-- DB/CVS logic
-- API calls
-- User account creation
-- Login session handling
+# CSV Reading/Writing
+Must use only:
+
+```
+utils/csv/readCsv.ts
+utils/csv/writeCsv.ts
+```
+
+Never access fs directly from logic.
+
+---
+
+# Session Handling
+Client-side only:
+
+- `localStorage.setItem("session", JSON.stringify({...}))`
+- `localStorage.removeItem("session")` for logout
+- Protected components check this session object
+
+No cookies, no tokens, no encryption.
+
+---
+
+# Error Handling (strict)
+All logic functions return:
+
+```
+Result<T>
+```
+
+Rules:
+- No exceptions thrown
+- UI handles errors
+- Error messages short & English only (e.g., `"email_exists"`, `"invalid_credentials"`)
 
 ---
 
 # Acceptance Criteria
 
-- Landing page renders without errors (`npm run dev`)
-- Buttons and layout follow Shadcn UI style
-- Language switching updates all visible text
-- All code respects AGENTS.md coding rules
-- All component and utility files follow naming conventions
-- No logic outside logic directories (except i18n util)
-- Page is visually clean, modern, and responsive
+Signup:
+- When email is unique → CSVに保存 / redirect to login
 
+Signup error:
+- Existing email → UI shows error  
+- CSV is unchanged
+
+Login:
+- Matching credentials → session saved / redirect to dashboard
+- Mismatch → error message
+
+Dashboard:
+- Requires login
+- load welcome message
+- logout clears session & redirects home
+
+Code must:
+- Follow AGENTS.md naming conventions
+- Follow TypeScript strict mode
+- Separate logic, UI, utils
+- Use Shadcn UI components
+- Include full JSDoc on functions
+- Zero thrown exceptions
+
+---
+
+# Out of Scope
+- No password hashing
+- No email verification
+- No real security
+- No JWT or backend auth
+- No rate limiting
+- No API endpoints

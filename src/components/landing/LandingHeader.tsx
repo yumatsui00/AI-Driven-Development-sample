@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuPortal, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import type { LandingHeaderProps, Lang } from "@/types/landing";
@@ -55,11 +56,11 @@ export default function LandingHeader({
         </DropdownMenuPortal>
       </DropdownMenu>
       <div className="flex items-center gap-3">
-        <Button variant="ghost" size="lg" className="border border-ink-200 bg-white px-6">
-          {translation.login}
+        <Button asChild variant="ghost" size="lg" className="border border-ink-200 bg-white px-6">
+          <Link href="/login">{translation.login}</Link>
         </Button>
-        <Button size="lg" className="px-8 shadow-xl shadow-ink-300/70">
-          {translation.signup}
+        <Button asChild size="lg" className="px-8 shadow-xl shadow-ink-300/70">
+          <Link href="/signup">{translation.signup}</Link>
         </Button>
       </div>
     </header>
