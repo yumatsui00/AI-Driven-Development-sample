@@ -12,8 +12,8 @@ mkdir -p "$AI_DIR"
 DIFF_FILE="$AI_DIR/diff.txt"
 PROMPT_FILE="$AI_DIR/review_prompt.txt"
 
-echo "Generating local diff..."
-git diff > "$DIFF_FILE"
+echo "Generating local diff against HEAD (staged + unstaged)..."
+git diff HEAD > "$DIFF_FILE"
 
 if [ ! -s "$DIFF_FILE" ]; then
   echo "❗ No changes detected. Diff is empty."

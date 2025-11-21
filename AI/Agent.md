@@ -1,4 +1,6 @@
-# Repository Guidelines
+# Repository Guidelines (AI Copy)
+
+This file mirrors `AGENTS.md` to satisfy review tooling that reads from `AI/Agent.md`. Keep it synchronized with `AGENTS.md`.
 
 This project is a Trello-like web app, but the true goal is an AI-driven development template. Always read `base.txt` and the branch-specific `AI/function.md` before coding; keep TypeScript strict enabled and honor the rules below.
 
@@ -31,7 +33,7 @@ This project is a Trello-like web app, but the true goal is an AI-driven develop
 ## Branching, PRs, and AI Review
 - Branch naming: `feature/*`, `fix/*`, `refactor/*`, `chore/*`. No direct pushes to `main`; integrate via `dev` → `main`. Keep `main` buildable.
 - PR flow: create branch → update `AI/function.md` → implement with Codex → open PR → AI code review → fix per review → add tests → merge to `dev` → merge to `main` after stabilization.
-- AI code review (local diff mode): run only when requested. The developer executes `./scripts/review.sh`, which generates `.ai/diff.txt` and `.ai/review_prompt.txt`. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review.
+- AI code review (local diff mode): run only when requested. The AI agent executes `./scripts/review.sh`, which generates `.ai/diff.txt` and `.ai/review_prompt.txt`. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review.
 
 ## Commands
-- Install and run: `npm install`, `npm run dev`, `npm run lint`, `npm run build`, `npm start`. Keep dependency versions pinned in `package-lock.json` and list Python deps (if any) in `requirements.txt`.
+- Install and run: `npm install`, `npm run dev`, `npm run lint`, `npm run build`, `npm run start`. Keep dependency versions pinned in `package-lock.json` and list Python deps (if any) in `requirements.txt`.
