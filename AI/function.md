@@ -1,48 +1,189 @@
-# Branch Function Spec
+# Function Specification: Landing Page Design
 
-# Requirements Definition Document Creation
-
-## Overview
-This branch is dedicated to creating `requirements_definition.md`,
-which will serve as the official specification document for the entire application.
-
-The main goal of this branch is not code implementation, but the definition of:
-- overall product requirements,
-- domain models,
-- CSV schemas,
-- screen list,
-- feature list,
-- and the MVP scope.
+This function.md describes the landing page UI implementation for the `landingpage-design` branch.  
+No backend logic, DB interaction, or authentication implementation is required.  
+Only UI, i18n handling, and component structure must be created.
 
 ## Purpose
-- Establish the foundation for AI-driven development.
-- Define the application's structure and expected behaviors before any implementation.
-- Prepare clear specifications for future `function.md` files used in individual feature branches.
+Create a stylish, modern landing page for the AI-driven Trello-like app.  
+This page serves as the app’s public entry and provides:
+- Introduction and visual appeal
+- Links to login / sign-up (UI only)
+- Language switcher (functional only for UI text replacement)
 
-## Deliverables
-- `/requirements_definition.md` at the project root.
-- Updated `AI/Agent.md` to reference this requirements document as the global specification.
-- (Optional) creation of `/AI/requirements_notes.md` if additional notes are required.
+## Scope
+This specification covers:
+- Landing page layout and visuals
+- Header with language switcher + login / sign-up buttons
+- Translation loading mechanism (client-side only)
+- UI component construction following AGENTS.md rules
+- No DB writes, no user authentication, no real account processing
 
-## Rules / Constraints
-- **No Codex usage in this branch.** Only ChatGPT (planning-focused AI) should be used.
-- No code implementation.  
-  Only documentation edits are allowed.
-- The document must follow the structure defined by the AI-driven development guidelines.
-- The domain model and CSV schema must remain consistent with `base.txt` policies.
+---
 
-## Acceptance Criteria
-- The requirements document is complete enough to begin feature-by-feature execution.
-- App-level entities (Project / Board / List / Task) are fully defined.
-- All CSV tables and their columns are explicitly documented.
-- The MVP scope is clearly defined.
-- The feature list is enumerated.
-- The document is internally consistent and matches the rules described in `base.txt`.
+# UI Requirements
 
-## Non-goals
-- No UI implementation.
-- No business logic.
-- No CSV read/write code.
-- No tests.
-- No infrastructure changes beyond documentation.
+## 1. Page Layout
+Use the following structure under `src/app/(public)/landing/page.tsx`:
+
+- A full-width hero section
+- Centered tagline and short description
+- A CTA button (e.g., "Start now")
+- Clean, minimalistic Shadcn UI components
+- Light mode only（ダークモード不要）
+- Responsive design (tailwind default utilities)
+
+Design should appear similar to modern SaaS landing pages, with:
+- Spacious layout  
+- Big bold headline  
+- Minimal iconography  
+- Soft shadows（tailwind shadow-lg程度）
+
+---
+
+# Header Requirements
+
+## 2. Header UI
+Place a header at the top of the page with:
+
+### Left side（画面左上）
+- **Language selector (button icon + dropdown)**  
+  - Options: `JP`, `EN`, `FR`
+  - Use client-side state
+  - Selection changes text by loading JSON from `assets/translations`
+
+### Right side（画面右上）
+- **Login button**
+- **Sign up button**
+
+Buttons should use Shadcn UI:
+- `<Button variant="ghost">` for Login
+- `<Button variant="default">` for Sign Up
+
+NO routing implementation is required.  
+Buttons may have `href="#"` or placeholder onClick.
+
+---
+
+# Translation Requirements
+
+## 3. Translation Files
+Create translation files:
+
+```
+assets/translations/jp.json
+assets/translations/en.json
+assets/translations/fr.json
+```
+
+Each file should include at least:
+
+```json
+{
+  "appName": "XXX",
+  "tagline": "XXX",
+  "description": "XXX",
+  "cta": "XXX",
+  "login": "Login",
+  "signup": "Sign Up",
+  "language": "Language"
+}
+```
+
+The text can be dummy; content is not important here.  
+UI must dynamically switch between JSON values.
+
+Implement a simple translation loader:
+
+- Load all JSON statically (import)
+- Keep selected language in component state
+- Provide a utility function: `src/utils/i18n.ts`
+
+No external libraries (e.g., i18next) allowed unless added to requirements.txt.
+
+---
+
+# Component Structure Requirements
+
+## 4. Components
+Follow AGENTS.md rules strictly:
+
+```
+src/
+  components/
+    landing/
+      LandingHeader.tsx
+      LandingHero.tsx
+      LandingLayout.tsx
+```
+
+- `LandingHeader.tsx`  
+  Contains language selector + login/sign-up buttons.
+
+- `LandingHero.tsx`  
+  Contains title, description, CTA button.
+
+- `LandingLayout.tsx`  
+  Wraps header + hero. No business logic.
+
+All components:
+- Should be functional components
+- Must include JSDoc comments
+- Use TypeScript strict types
+- Props types stored in `src/types/landing.ts`
+
+---
+
+# Logic Requirements
+
+## 5. i18n Handling (client-side only)
+Implement `src/utils/i18n.ts`:
+
+- `loadTranslation(lang: Lang): TranslationObject`
+- Synchronous import only
+- No async FS, no external API calls
+
+Type definitions:
+
+```ts
+export type Lang = 'jp' | 'en' | 'fr';
+
+export interface TranslationObject {
+  appName: string;
+  tagline: string;
+  description: string;
+  cta: string;
+  login: string;
+  signup: string;
+  language: string;
+}
+```
+
+State management:
+- Use `useState` inside layout/landing page
+- Pass translations down as props
+
+---
+
+# Out of Scope
+The following must NOT be implemented:
+- Real authentication
+- Real routing to dashboard
+- DB/CVS logic
+- API calls
+- User account creation
+- Login session handling
+
+---
+
+# Acceptance Criteria
+
+- Landing page renders without errors (`npm run dev`)
+- Buttons and layout follow Shadcn UI style
+- Language switching updates all visible text
+- All code respects AGENTS.md coding rules
+- All component and utility files follow naming conventions
+- No logic outside logic directories (except i18n util)
+- Page is visually clean, modern, and responsive
+
 

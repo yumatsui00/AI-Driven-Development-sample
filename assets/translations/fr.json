@@ -1,0 +1,15 @@
+{
+  "appName": "AI Boards",
+  "tagline": "Organisez vos idées à la vitesse de l’IA",
+  "description": "Une expérience type Trello avec des flux assistés par l’IA et des données adaptées au CSV.",
+  "cta": "Commencer",
+  "login": "Connexion",
+  "signup": "Inscription",
+  "language": "Langue",
+  "languages": {
+    "jp": "Japonais",
+    "en": "Anglais",
+    "fr": "Français"
+  },
+  "aiSummary": "Un starter conçu pour le développement piloté par l’IA : règles centralisées dans base.txt, AGENTS.md et AI/DEVELOPMENT.md afin d’aligner code, tests et flux CSV."
+}
