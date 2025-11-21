@@ -18,7 +18,13 @@ jobs:
 
       - name: Generate diff file
         run: |
-          git diff origin/${{ github.base_ref }}...HEAD > diff.txt
+          if git merge-base --is-ancestor origin/${{ github.base_ref }} HEAD; then
+            git diff origin/${{ github.base_ref }}...HEAD > diff.txt
+          else
+            echo "No merge base. Using full diff of HEAD."
+            git diff HEAD > diff.txt
+          fi
+          
           echo "Diff generated:"
           cat diff.txt
 
@@ -27,4 +33,3 @@ jobs:
         with:
           name: pr-diff
           path: diff.txt
-
