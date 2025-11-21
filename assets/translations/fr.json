@@ -11,5 +11,21 @@
     "en": "Anglais",
     "fr": "Français"
   },
-  "aiSummary": "Un starter conçu pour le développement piloté par l’IA : règles centralisées dans base.txt, AGENTS.md et AI/DEVELOPMENT.md afin d’aligner code, tests et flux CSV."
+  "aiSummary": "Un starter conçu pour le développement piloté par l’IA : règles centralisées dans base.txt, AGENTS.md et AI/DEVELOPMENT.md afin d’aligner code, tests et flux CSV.",
+  "auth": {
+    "signupTitle": "Créer un compte",
+    "signupSubtitle": "Inscrivez-vous pour accéder à l’expérience AI Board.",
+    "loginTitle": "Bon retour",
+    "loginSubtitle": "Reprenez où vous vous êtes arrêté.",
+    "emailLabel": "Email",
+    "passwordLabel": "Mot de passe",
+    "signupAction": "S’inscrire",
+    "loginAction": "Se connecter",
+    "logout": "Se déconnecter",
+    "dashboardTitle": "Tableau de bord",
+    "welcome": "Bienvenue",
+    "sessionMissing": "Session introuvable. Redirection...",
+    "duplicatedEmail": "Cet email est déjà enregistré.",
+    "invalidCredentials": "Email ou mot de passe invalide."
+  }
 }
