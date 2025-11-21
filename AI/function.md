@@ -15,6 +15,14 @@ Provide a simple authentication mechanism for the application, enabling:
 
 This is not a security-focused system; it is only for AI-driven development scaffolding.
 
+## Scope
+This specification covers:
+- Signup and login UI pages
+- Dashboard guard behavior
+- Translation handling for auth UI, including language preference persistence in localStorage (default to English when absent)
+- UI component construction following AGENTS.md rules
+- No password hashing or external auth
+
 ---
 
 # Files & Directories

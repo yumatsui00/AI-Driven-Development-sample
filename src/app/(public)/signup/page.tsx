@@ -1,12 +1,15 @@
+"use client";
+
 import { Suspense } from "react";
 import SignupForm from "@/components/auth/SignupForm";
 import { loadTranslation } from "@/utils/i18n";
+import { getStoredLang } from "@/utils/lang";
 
 /**
  * Public signup page.
  */
 export default function SignupPage() {
-  const translation = loadTranslation("en");
+  const translation = loadTranslation(getStoredLang("en"));
 
   return (
     <Suspense>
