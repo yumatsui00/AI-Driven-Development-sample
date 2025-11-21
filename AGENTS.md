@@ -29,6 +29,11 @@ This project is a Trello-like web app, but the true goal is an AI-driven develop
 ## Tests
 - Add tests after features stabilize. Test only logic (no UI tests): unit tests for pure functions, repository tests for CSV IO, and integration for task/project flows (create → CSV → read → delete). Place tests in `tests/` mirroring `logic/` and `src/utils/`.
 
+## Testing (CI Integration)
+- Every PR must run the test suite automatically.
+- CI executes: npm ci → npm run lint → npm test.
+- Tests must pass before merging.
+
 ## Branching, PRs, and AI Review
 - Branch naming: `feature/*`, `fix/*`, `refactor/*`, `chore/*`. No direct pushes to `main`; integrate via `dev` → `main`. Keep `main` buildable.
 - PR flow: create branch → update `AI/function.md` → implement with Codex → push changes → open PR.
