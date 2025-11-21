@@ -30,8 +30,8 @@ This project is a Trello-like web app, but the true goal is an AI-driven develop
 
 ## Branching, PRs, and AI Review
 - Branch naming: `feature/*`, `fix/*`, `refactor/*`, `chore/*`. No direct pushes to `main`; integrate via `dev` → `main`. Keep `main` buildable.
-- PR flow: create branch → update `AI/function.md` → implement with Codex → open PR → AI code review → fix per review → add tests → merge to `dev` → merge to `main` after stabilization.
-- AI code review (local diff mode): run only when requested. The developer executes `./scripts/review.sh`, which generates `.ai/diff.txt` and `.ai/review_prompt.txt`. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review.
+- PR flow: create branch → update `AI/function.md` → implement with Codex → push changes → open PR.
+- AI code review (local diff mode): only after PR is opened and CI passes, the developer runs `./scripts/review.sh` to generate `.ai/diff.txt` and `.ai/review_prompt.txt`, then requests review. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review. After fixes and tests, merge via `dev` → `main`.
 
 ## Commands
 - Install and run: `npm install`, `npm run dev`, `npm run lint`, `npm run build`, `npm start`. Keep dependency versions pinned in `package-lock.json` and list Python deps (if any) in `requirements.txt`.
