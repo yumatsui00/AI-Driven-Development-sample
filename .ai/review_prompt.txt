@@ -7,34 +7,111 @@ Use the review rules defined in Agent.md.
 ---
 
 ## Diff
-diff --git a/AGENTS.md b/AGENTS.md
-index 8047ab7..7e3bf25 100644
---- a/AGENTS.md
-+++ b/AGENTS.md
-@@ -31,7 +31,7 @@ This project is a Trello-like web app, but the true goal is an AI-driven develop
- ## Branching, PRs, and AI Review
- - Branch naming: `feature/*`, `fix/*`, `refactor/*`, `chore/*`. No direct pushes to `main`; integrate via `dev` → `main`. Keep `main` buildable.
- - PR flow: create branch → update `AI/function.md` → implement with Codex → open PR → AI code review → fix per review → add tests → merge to `dev` → merge to `main` after stabilization.
--- AI code review (local diff mode): run only when requested. Developer executes `./scripts/review.sh`, which generates `.ai/diff.txt` and `.ai/review_prompt.txt`. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review.
-+- AI code review (local diff mode): run only when requested. The developer executes `./scripts/review.sh`, which generates `.ai/diff.txt` and `.ai/review_prompt.txt`. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review.
+diff --git a/.ai/diff.txt b/.ai/diff.txt
+index 585da57..e69de29 100644
+--- a/.ai/diff.txt
++++ b/.ai/diff.txt
+@@ -1,28 +0,0 @@
+-diff --git a/AGENTS.md b/AGENTS.md
+-index 8047ab7..7e3bf25 100644
+---- a/AGENTS.md
+-+++ b/AGENTS.md
+-@@ -31,7 +31,7 @@ This project is a Trello-like web app, but the true goal is an AI-driven develop
+- ## Branching, PRs, and AI Review
+- - Branch naming: `feature/*`, `fix/*`, `refactor/*`, `chore/*`. No direct pushes to `main`; integrate via `dev` → `main`. Keep `main` buildable.
+- - PR flow: create branch → update `AI/function.md` → implement with Codex → open PR → AI code review → fix per review → add tests → merge to `dev` → merge to `main` after stabilization.
+--- AI code review (local diff mode): run only when requested. Developer executes `./scripts/review.sh`, which generates `.ai/diff.txt` and `.ai/review_prompt.txt`. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review.
+-+- AI code review (local diff mode): run only when requested. The developer executes `./scripts/review.sh`, which generates `.ai/diff.txt` and `.ai/review_prompt.txt`. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review.
+- 
+- ## Commands
+- - Install and run: `npm install`, `npm run dev`, `npm run lint`, `npm run build`, `npm start`. Keep dependency versions pinned in `package-lock.json` and list Python deps (if any) in `requirements.txt`.
+-diff --git a/scripts/review.sh b/scripts/review.sh
+-index 73676a9..04d6f87 100755
+---- a/scripts/review.sh
+-+++ b/scripts/review.sh
+-@@ -12,8 +12,8 @@ mkdir -p "$AI_DIR"
+- DIFF_FILE="$AI_DIR/diff.txt"
+- PROMPT_FILE="$AI_DIR/review_prompt.txt"
+- 
+--echo "Generating local diff..."
+--git diff > "$DIFF_FILE"
+-+echo "Generating local diff against HEAD (staged + unstaged)..."
+-+git diff HEAD > "$DIFF_FILE"
+- 
+- if [ ! -s "$DIFF_FILE" ]; then
+-   echo "❗ No changes detected. Diff is empty."
+diff --git a/.ai/review_prompt.txt b/.ai/review_prompt.txt
+index 67c6423..9db6507 100644
+--- a/.ai/review_prompt.txt
++++ b/.ai/review_prompt.txt
+@@ -7,34 +7,39 @@ Use the review rules defined in Agent.md.
+ ---
  
- ## Commands
- - Install and run: `npm install`, `npm run dev`, `npm run lint`, `npm run build`, `npm start`. Keep dependency versions pinned in `package-lock.json` and list Python deps (if any) in `requirements.txt`.
-diff --git a/scripts/review.sh b/scripts/review.sh
-index 73676a9..04d6f87 100755
---- a/scripts/review.sh
-+++ b/scripts/review.sh
-@@ -12,8 +12,8 @@ mkdir -p "$AI_DIR"
- DIFF_FILE="$AI_DIR/diff.txt"
- PROMPT_FILE="$AI_DIR/review_prompt.txt"
+ ## Diff
+-diff --git a/AGENTS.md b/AGENTS.md
+-index 8047ab7..7e3bf25 100644
+---- a/AGENTS.md
+-+++ b/AGENTS.md
+-@@ -31,7 +31,7 @@ This project is a Trello-like web app, but the true goal is an AI-driven develop
+- ## Branching, PRs, and AI Review
+- - Branch naming: `feature/*`, `fix/*`, `refactor/*`, `chore/*`. No direct pushes to `main`; integrate via `dev` → `main`. Keep `main` buildable.
+- - PR flow: create branch → update `AI/function.md` → implement with Codex → open PR → AI code review → fix per review → add tests → merge to `dev` → merge to `main` after stabilization.
+--- AI code review (local diff mode): run only when requested. Developer executes `./scripts/review.sh`, which generates `.ai/diff.txt` and `.ai/review_prompt.txt`. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review.
+-+- AI code review (local diff mode): run only when requested. The developer executes `./scripts/review.sh`, which generates `.ai/diff.txt` and `.ai/review_prompt.txt`. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review.
+- 
+- ## Commands
+- - Install and run: `npm install`, `npm run dev`, `npm run lint`, `npm run build`, `npm start`. Keep dependency versions pinned in `package-lock.json` and list Python deps (if any) in `requirements.txt`.
+-diff --git a/scripts/review.sh b/scripts/review.sh
+-index 73676a9..04d6f87 100755
+---- a/scripts/review.sh
+-+++ b/scripts/review.sh
+-@@ -12,8 +12,8 @@ mkdir -p "$AI_DIR"
+- DIFF_FILE="$AI_DIR/diff.txt"
+- PROMPT_FILE="$AI_DIR/review_prompt.txt"
+- 
+--echo "Generating local diff..."
+--git diff > "$DIFF_FILE"
+-+echo "Generating local diff against HEAD (staged + unstaged)..."
+-+git diff HEAD > "$DIFF_FILE"
+- 
+- if [ ! -s "$DIFF_FILE" ]; then
+-   echo "❗ No changes detected. Diff is empty."
++diff --git a/.ai/diff.txt b/.ai/diff.txt
++index 585da57..e69de29 100644
++--- a/.ai/diff.txt
+++++ b/.ai/diff.txt
++@@ -1,28 +0,0 @@
++-diff --git a/AGENTS.md b/AGENTS.md
++-index 8047ab7..7e3bf25 100644
++---- a/AGENTS.md
++-+++ b/AGENTS.md
++-@@ -31,7 +31,7 @@ This project is a Trello-like web app, but the true goal is an AI-driven develop
++- ## Branching, PRs, and AI Review
++- - Branch naming: `feature/*`, `fix/*`, `refactor/*`, `chore/*`. No direct pushes to `main`; integrate via `dev` → `main`. Keep `main` buildable.
++- - PR flow: create branch → update `AI/function.md` → implement with Codex → open PR → AI code review → fix per review → add tests → merge to `dev` → merge to `main` after stabilization.
++--- AI code review (local diff mode): run only when requested. Developer executes `./scripts/review.sh`, which generates `.ai/diff.txt` and `.ai/review_prompt.txt`. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review.
++-+- AI code review (local diff mode): run only when requested. The developer executes `./scripts/review.sh`, which generates `.ai/diff.txt` and `.ai/review_prompt.txt`. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review.
++- 
++- ## Commands
++- - Install and run: `npm install`, `npm run dev`, `npm run lint`, `npm run build`, `npm start`. Keep dependency versions pinned in `package-lock.json` and list Python deps (if any) in `requirements.txt`.
++-diff --git a/scripts/review.sh b/scripts/review.sh
++-index 73676a9..04d6f87 100755
++---- a/scripts/review.sh
++-+++ b/scripts/review.sh
++-@@ -12,8 +12,8 @@ mkdir -p "$AI_DIR"
++- DIFF_FILE="$AI_DIR/diff.txt"
++- PROMPT_FILE="$AI_DIR/review_prompt.txt"
++- 
++--echo "Generating local diff..."
++--git diff > "$DIFF_FILE"
++-+echo "Generating local diff against HEAD (staged + unstaged)..."
++-+git diff HEAD > "$DIFF_FILE"
++- 
++- if [ ! -s "$DIFF_FILE" ]; then
++-   echo "❗ No changes detected. Diff is empty."
  
--echo "Generating local diff..."
--git diff > "$DIFF_FILE"
-+echo "Generating local diff against HEAD (staged + unstaged)..."
-+git diff HEAD > "$DIFF_FILE"
+ ---
  
- if [ ! -s "$DIFF_FILE" ]; then
-   echo "❗ No changes detected. Diff is empty."
 
 ---
 
