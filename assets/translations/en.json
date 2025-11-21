@@ -27,5 +27,17 @@
     "sessionMissing": "Session not found. Redirecting...",
     "duplicatedEmail": "This email is already registered.",
     "invalidCredentials": "Invalid email or password."
+  },
+  "projects": {
+    "title": "Your projects",
+    "create": "Create project",
+    "create_button": "New project",
+    "name_placeholder": "Project name",
+    "empty": "No projects yet. Create your first one.",
+    "logout": "Log out",
+    "created_at": "Created",
+    "error": "Something went wrong. Please try again.",
+    "name_required": "Project name is required.",
+    "cancel": "Cancel"
   }
 }
