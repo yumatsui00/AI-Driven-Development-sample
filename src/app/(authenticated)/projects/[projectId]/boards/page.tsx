@@ -7,6 +7,7 @@ import BoardCreateDialog from "@/components/project/BoardCreateDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { Board } from "@/types/board";
+import type { Project } from "@/types/project";
 import type { Lang } from "@/types/landing";
 import { loadTranslation } from "@/utils/i18n";
 import { getStoredLang, setStoredLang } from "@/utils/lang";
@@ -26,6 +27,7 @@ export default function ProjectBoardsPage() {
   const [boards, setBoards] = useState<Board[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [project, setProject] = useState<Project | null>(null);
 
   const fetchBoards = useCallback(async () => {
     setLoading(true);
@@ -63,8 +65,40 @@ export default function ProjectBoardsPage() {
       router.replace("/home");
       return;
     }
-    fetchBoards();
-  }, [projectId, router, fetchBoards]);
+    validateProject(session.userId);
+  }, [projectId, router, fetchBoards, validateProject]);
+
+  const validateProject = useCallback(
+    async (userId: string) => {
+      if (!projectId) {
+        router.replace("/home");
+        return;
+      }
+      try {
+        const res = await fetch("/api/projects/list", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId })
+        });
+        const data = await res.json();
+        if (!res.ok || data.error) {
+          router.replace("/home");
+          return;
+        }
+        const projects = (data.projects as Project[]) ?? [];
+        const found = projects.find((p) => p.id === projectId);
+        if (!found) {
+          router.replace("/home");
+          return;
+        }
+        setProject(found);
+        fetchBoards();
+      } catch (e) {
+        router.replace("/home");
+      }
+    },
+    [fetchBoards, projectId, router]
+  );
 
   const handleCreate = async (name: string) => {
     setError("");
@@ -103,7 +137,7 @@ export default function ProjectBoardsPage() {
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
                 <h1 className="text-2xl font-bold text-ink-900">{translation.boards.title}</h1>
-                <p className="text-sm text-ink-600">Project: {projectId}</p>
+                <p className="text-sm text-ink-600">{project?.name ?? translation.boards.back}</p>
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
