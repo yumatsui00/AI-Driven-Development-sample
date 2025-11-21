@@ -1,8 +1,14 @@
-# Branch Function Spec
+## Test Requirements
 
-Update this file on each feature/fix/refactor/chore branch to describe the branch-specific goal, scope, and acceptance checks. Keep it concise (what, why, done when).
+- logic/配下unit test を作成する
+  - email 重複チェックの正常/異常
+  - password 空白チェック
+  - Result<success/error> の返却が正しいか
 
-- What to build/change
-- Constraints or edge cases
-- Data mutations (CSV paths/columns) if any
-- Tests to add after review
+- utils/csv/配下 の repository test を作成する
+  - 新規行追加が CSV の末尾に追加される
+  - 改行が LF であること
+  - ダブルクオートを含まないこと
+
+- Integration test
+  - signup → CSV 保存 → login → 成功の一連をテストする

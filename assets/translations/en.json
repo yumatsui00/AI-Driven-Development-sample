@@ -1,0 +1,31 @@
+{
+  "appName": "AI Boards",
+  "tagline": "Organize ideas with AI speed",
+  "description": "A modern Trello-like experience with AI-assisted workflows and simple CSV-friendly data.",
+  "cta": "Start now",
+  "login": "Login",
+  "signup": "Sign Up",
+  "language": "Language",
+  "languages": {
+    "jp": "Japanese",
+    "en": "English",
+    "fr": "French"
+  },
+  "aiSummary": "Built as an AI-driven development starter: rules live in base.txt, AGENTS.md, and AI/DEVELOPMENT.md to keep code, tests, and CSV workflows consistent.",
+  "auth": {
+    "signupTitle": "Create your account",
+    "signupSubtitle": "Sign up to access the AI-driven board experience.",
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Log in to continue where you left off.",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "signupAction": "Sign up",
+    "loginAction": "Log in",
+    "logout": "Log out",
+    "dashboardTitle": "Dashboard",
+    "welcome": "Welcome",
+    "sessionMissing": "Session not found. Redirecting...",
+    "duplicatedEmail": "This email is already registered.",
+    "invalidCredentials": "Invalid email or password."
+  }
+}

@@ -1,4 +1,6 @@
-# Repository Guidelines
+# Repository Guidelines (AI Copy)
+
+This file mirrors `AGENTS.md` to satisfy review tooling that reads from `AI/Agent.md`. Keep it synchronized with `AGENTS.md`.
 
 This project is a Trello-like web app, but the true goal is an AI-driven development template. Always read `base.txt` and the branch-specific `AI/function.md` before coding; keep TypeScript strict enabled and honor the rules below.
 
@@ -24,15 +26,9 @@ This project is a Trello-like web app, but the true goal is an AI-driven develop
 
 ## Component & Logic Boundaries
 - Page components contain no business logic. Place domain logic in `logic/`; domain UI goes under `src/components/<domain>`; hooks manage local form/state; keep components single-responsibility.
-- UI がサーバー状態を更新する場合は `app/api/**/route.ts` の API 経由で `logic/` を呼び出す。API ルート名は `route.ts` 固定。
 
 ## Tests
 - Add tests after features stabilize. Test only logic (no UI tests): unit tests for pure functions, repository tests for CSV IO, and integration for task/project flows (create → CSV → read → delete). Place tests in `tests/` mirroring `logic/` and `src/utils/`.
-
-## Testing (CI Integration)
-- Every PR must run the test suite automatically.
-- CI executes: npm ci → npm run lint → npm test.
-- Tests must pass before merging.
 
 ## Branching, PRs, and AI Review
 - Branch naming: `feature/*`, `fix/*`, `refactor/*`, `chore/*`. No direct pushes to `main`; integrate via `dev` → `main`. Keep `main` buildable.
@@ -40,4 +36,4 @@ This project is a Trello-like web app, but the true goal is an AI-driven develop
 - AI code review (local diff mode): only after PR is opened and CI passes, the developer runs `./scripts/review.sh` to generate `.ai/diff.txt` and `.ai/review_prompt.txt`, then requests review. Reviews must use `AGENTS.md`, `AI/function.md`, and the diff in `.ai/review_prompt.txt` as the single sources of truth. Report only comments (no code fixes) covering: specification consistency, security risks, TypeScript strict issues, error handling correctness, CSV/IO handling, logic consistency, and recommended tests. Do not modify source files during review. After fixes and tests, merge via `dev` → `main`.
 
 ## Commands
-- Install and run: `npm install`, `npm run dev`, `npm run lint`, `npm run build`, `npm start`. Keep dependency versions pinned in `package-lock.json` and list Python deps (if any) in `requirements.txt`.
+- Install and run: `npm install`, `npm run dev`, `npm run lint`, `npm run build`, `npm run start`. Keep dependency versions pinned in `package-lock.json` and list Python deps (if any) in `requirements.txt`.

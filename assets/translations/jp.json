@@ -1,0 +1,31 @@
+{
+  "appName": "AI Boards",
+  "tagline": "AI の速度でアイデアを整理",
+  "description": "AI 支援のワークフローと CSV に優しいデータ設計を備えた Trello ライクな体験です。",
+  "cta": "今すぐ始める",
+  "login": "ログイン",
+  "signup": "サインアップ",
+  "language": "言語",
+  "languages": {
+    "jp": "日本語",
+    "en": "英語",
+    "fr": "フランス語"
+  },
+  "aiSummary": "AI 駆動開発の雛形。base.txt・AGENTS.md・AI/DEVELOPMENT.md にルールを集約し、コード・テスト・CSV 運用を一貫させています。",
+  "auth": {
+    "signupTitle": "アカウント作成",
+    "signupSubtitle": "AI ボード体験を始めるために登録してください。",
+    "loginTitle": "おかえりなさい",
+    "loginSubtitle": "前回の続きから進めましょう。",
+    "emailLabel": "メールアドレス",
+    "passwordLabel": "パスワード",
+    "signupAction": "登録する",
+    "loginAction": "ログイン",
+    "logout": "ログアウト",
+    "dashboardTitle": "ダッシュボード",
+    "welcome": "ようこそ",
+    "sessionMissing": "セッションが見つかりません。リダイレクトします。",
+    "duplicatedEmail": "このメールは既に登録されています。",
+    "invalidCredentials": "メールまたはパスワードが正しくありません。"
+  }
+}
